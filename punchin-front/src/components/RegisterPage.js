@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+import {backRoute} from '../routers/AppRouter';
+import { useHistory } from 'react-router-dom';
+
 const RegisterPage = () => {
 
     const [firstName, setFirstName] = useState('');
@@ -8,6 +11,7 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [matchingPassword, setMatchingPassword] = useState('');
     const [email, setEmail] = useState('');
+    let history = useHistory();
 
     const matchPasswords = () =>{
        if(password !== matchingPassword){
@@ -31,7 +35,7 @@ const RegisterPage = () => {
                 email
             });
             
-            fetch('http://localhost:8081/register',{
+            fetch((backRoute.concat('register')),{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body
@@ -45,6 +49,8 @@ const RegisterPage = () => {
             })
             .then(data => {
                 console.log(data);
+                history.push('/login');
+
             })
             .catch(error => {
                 alert(error);

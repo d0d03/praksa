@@ -1,16 +1,17 @@
 import React, { useState,useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import UserContext from '../context/user-context';
+import { backRoute } from '../routers/AppRouter';
 
 const LoginPage = () => {
     const {user, dispatchUser } = useContext(UserContext);
-    let history = useHistory();
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
+    let history = useHistory();
 
     const loginUser = (e) => {
         e.preventDefault();
-            fetch('http://localhost:8081/authenticate',{
+            fetch(backRoute.concat('authenticate'),{
             method:'POST',
             headers:{'Content-Type' : 'application/json'},
             body: JSON.stringify({username,password})
@@ -29,8 +30,8 @@ const LoginPage = () => {
             .catch(error => {
                 alert(error);
             })
-        setUsername('');
-        setPassword('');
+            setUsername('');
+            setPassword('');
     } 
 
     return(

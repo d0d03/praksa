@@ -1,12 +1,13 @@
 import React,{ useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import UserContext from '../context/user-context';
 
 const Header = () => {
 
     const {user,dispatchUser} = useContext(UserContext);
-
+    let history = useHistory();
     return(
         <header>
             <h1>Punchin</h1>
@@ -14,7 +15,10 @@ const Header = () => {
             {user.token ?
                 <>
                     <NavLink to="/workdays">Workdays</NavLink>
-                    <button onClick={() => dispatchUser({type:'LOGOUT'})}>Log out</button>
+                    <button onClick={() => {
+                        dispatchUser({type:'LOGOUT'});
+                        history.push('/login');   
+                    }}>Log out</button>
                 </>:
                 <>
                     <NavLink to="/register">Register</NavLink>

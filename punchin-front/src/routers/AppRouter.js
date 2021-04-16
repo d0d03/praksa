@@ -1,7 +1,5 @@
 import React, {useEffect, useReducer} from 'react';
 import {BrowserRouter, Route, Switch } from 'react-router-dom';
-import {createBrowserHistory} from 'history';
-
 
 import Header from '../components/Header';
 import DashboardPage from '../components/DashboardPage';
@@ -9,6 +7,7 @@ import NotFoundPage from '../components/NotFoundPage';
 import WorkdaysPage from '../components/WorkdaysPage';
 import LoginPage from '../components/LoginPage';
 import RegisterPage from '../components/RegisterPage';
+import ConfirmationPage from '../components/ConfirmationPage';
 import UserContext from '../context/user-context';
 import userReducer from '../reducers/users';
 
@@ -32,6 +31,7 @@ const AppRouter = () => {
                     <Route path="/workdays" component={WorkdaysPage} />
                     <Route path="/login" component={LoginPage} />
                     <Route path="/register" component={RegisterPage} />
+                    <Route path="/confirm-account/:token" component={ConfirmationPage} />
                     <Route component={NotFoundPage} />
                 </Switch>
             </UserContext.Provider>
@@ -40,5 +40,6 @@ const AppRouter = () => {
     
 };
 
+export const backRoute = "http://localhost:8080/";
 export { AppRouter as default }
-export const history = createBrowserHistory();
+

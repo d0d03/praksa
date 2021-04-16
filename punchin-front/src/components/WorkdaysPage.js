@@ -2,12 +2,13 @@ import React, { useEffect, useContext } from 'react';
 
 import UserContext from '../context/user-context';
 import WorkdaysList from './WorkdaysList';
+import {backRoute} from '../routers/AppRouter';
 
 const WorkdaysPage = (props) => 
 {
-    const {dispatchUser} = useContext(UserContext);
+    const {user,dispatchUser} = useContext(UserContext);
     useEffect(()=>{
-        fetch('http://localhost:8081/employees',{
+        fetch((backRoute).concat('employees/dodo'),{
             method:'GET',
             headers:{'Authorization':"Bearer " + localStorage.getItem('token')}
         })
@@ -19,7 +20,7 @@ const WorkdaysPage = (props) =>
             }
         })
         .then(data=>{
-            console.log(data);}) //TODO ispisati radne dane
+            dispatchUser({type:'SET_USER_DATA',email:data.email})}) //TODO ispisati radne dane
         .catch(error=>{
             alert(error);
             dispatchUser({type:'LOGOUT'});
