@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useReducer } from 'react';
-import { Spin,DatePicker } from 'antd';
+import { Spin, DatePicker, TimePicker, Space } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 
@@ -10,13 +10,31 @@ import workdaysReducer from '../reducers/workdays';
 const WorkdaysPage = () => 
 {
     const [workdays,setWorkdays] = useState([]);
-    const [date,setDate] = useState('');
+    const [date,setDate] = useState();
+    const [start,setStart] = useState();
+    const [end,setEnd] = useState();
+    const [hours,setHours] = useState();
     const [loader, setLoader] = useState(false);
 
+    const {RangePicker} = TimePicker;
     //const [workdays,dispatchWorkdays] = useReducer(workdaysReducer,[]);
     
-    function onChange(date,dateString){
+    function onDateChange(date){
         setDate(date);
+    }
+
+    function onTimeChange(value){
+        if(value!==null){
+            setStart(value[0]);
+            setEnd(value[1]);
+            //setHours(value[1].diff(value[0],true));
+            const temp = (value[1].diff(value[0],true));
+            console.log(temp);
+            console.log(moment(temp).format("HH:mm"));
+        }else{
+            setStart(null);
+            setEnd(null);
+        }
     }
 
     useEffect(()=>{
@@ -54,23 +72,40 @@ const WorkdaysPage = () =>
         e.preventDefault();
         setWorkdays([
             ...workdays,
-            { date : moment(date).format("YYYY-MM-DD") }
+            { 
+                date : moment(date).format("YYYY-MM-DD"),
+                id: Math.floor(Math.random() * 100 ),
+                start: moment(start).format("HH:mm"),
+                end: moment(end).format("HH:mm"),
+
+            }
         ]);
         setDate(null);
+        setStart(null);
+        setEnd(null);
     }
+
+    const removeWorkday = (id) => {
+        setWorkdays(workdays.filter((workday) => workday.id !== id));
+    } 
 
     const workday = (
         <div>
             <h1>Workdays</h1>
             {workdays.map((workday)=>(
-                <div key={workday.date}>
+                <div key={workday.id}>
                     <h3>{workday.date}</h3>
+                    <p>Start -  {workday.start} | End - {workday.end}</p>
+                    <button onClick={()=>removeWorkday(workday.id)}>X</button>
                 </div>
             ))}
             <p>Add workday</p>
             <form onSubmit={addWorkday}>
-                <DatePicker value={date} onChange={onChange} />
-                <button>Add workday</button>
+                <Space direction="vertical" size={12}>
+                    <DatePicker value={date} onChange={onDateChange} />
+                    <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"}/>
+                    <button>Add workday</button>
+                </Space>  
             </form>
         </div>
     );
