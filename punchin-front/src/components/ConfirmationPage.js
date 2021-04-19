@@ -1,28 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
+import { Spin } from 'antd';
 
 import fetcher from '../actions/login';
 
 const ConfirmationPage = () => {
 
     const [confirmation, setConfirmation] = useState();
+    const [loader, setLoader] = useState(false);
     const location = useLocation();
     const history = useHistory();
-    if(location.search.startsWith("?token=")){
-        fetcher(location.search,{})
-        .then(response=>{
-            if(response!==null){
-                console.log(response);
-            }
-        })
-    }else{
-        history.push('register');
-    }
+
+    useEffect(()=>{
+        setLoader(true);
+        if(location.search.startsWith("?token=")){
+            fetcher('/confirm-account' + location.search,{})
+            .then(response=>{
+                setConfirmation(response.message);
+                setLoader(false);
+            })
+        }else{
+            history.push('register');
+        }
+    },[location.search, history]);
 
     return(
-        <div>
-            
-        </div>
+        <Spin spinning = {loader} delay={1}>
+            {confirmation}
+        </Spin>
     );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import fetcher from '../actions/login';
+import RegistrationSucess from './RegistrationSucess';
 
 const RegisterPage = () => {
 
@@ -11,7 +11,7 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [matchingPassword, setMatchingPassword] = useState('');
     const [email, setEmail] = useState('');
-    let history = useHistory();
+    const[success, setSuccess] = useState(false);
 
     const matchPasswords = () =>{
        if(password !== matchingPassword){
@@ -38,13 +38,20 @@ const RegisterPage = () => {
             fetcher('/register',{method:'POST',body})
             .then((response) => {
                 if(response!==null){
-                    console.log(response.text());
+                    setSuccess(true);
                 }
             })
         }
     }
-    
+
+    if(success){
+        return (
+        <div>
+            <RegistrationSucess />
+        </div>
+    )}
     return(
+
         <div>
             <form onSubmit={registerUser}>
                 <input type="text" placeholder="First name" required value={firstName} onChange={(e) => setFirstName(e.target.value)}/>

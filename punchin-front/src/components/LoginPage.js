@@ -5,9 +5,10 @@ import UserContext from '../context/user-context';
 import fetcher from '../actions/login';
 
 const LoginPage = () => {
-    const {dispatchUser } = useContext(UserContext);
+    const {dispatchUser} = useContext(UserContext);
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
+    const [sucess,setSucess] = useState(true);
     let history = useHistory();
 
     const loginUser = (e) => {
@@ -21,8 +22,12 @@ const LoginPage = () => {
             fetcher('/authenticate',{method:'POST',body:JSON.stringify(data)})
             .then(response => {
                 if(response !== null){
-                    dispatchUser({type:'LOGIN',username,token:response.token});
-                    history.push('/');
+                    if(response.message!==null){
+                        setSucess(false);
+                    }else{
+                        dispatchUser({type:'LOGIN',username,token:response.token});
+                        history.push('/');
+                    }
                 }
             })
         }
@@ -38,6 +43,9 @@ const LoginPage = () => {
                     <input type="password" value={password} placeholder="password" onChange={(e) => setPassword(e.target.value)} required/>
                     <button>Sign in</button>
                 </form>
+            }
+            {!sucess && 
+                <p>Plesae confirm your email to proceed</p>
             }
         </div>
     );

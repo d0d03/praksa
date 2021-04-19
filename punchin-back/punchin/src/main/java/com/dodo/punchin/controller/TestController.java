@@ -107,13 +107,12 @@ public class TestController {
 			mailMessage.setTo(employee.getEmail());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setFrom("dominik.bosnjak33@gmail.com");
-			mailMessage.setText("Hello " + employee.getUsername() +" !!! \nWE ARE SO GLAD TO HAVE YOU <3,\nTo confirm your account, please click here : " +
-			"http://localhost:3000?token=confirm-account"+confirmationToken.getConfirmationToken());
+			mailMessage.setText("Wellcome,\nTo confirm your account, please click here : \n" +
+			"http://localhost:3000/confirm-account?token="+confirmationToken.getConfirmationToken());
 			
 			emailSenderService.sendEmail(mailMessage);
 			
-			return new ResponseEntity<>("User registered successfuly",HttpStatus.OK);
-			
+			return new ResponseEntity<>(new AuthenticationResponse("User registered sucessfuly"),HttpStatus.OK);
 		}catch (MailException e) {
 			throw new Exception(e.getMessage());
 		}
@@ -134,9 +133,9 @@ public class TestController {
 //			Set<Role> roles = employee.getRoles();
 //			Role enabled = roleRepository.findByName(ERole.ROLE_ENABLED).orElseThrow(()->new RuntimeException("Error: Role is not found"));
 //			roles.add(enabled);
-			return ResponseEntity.ok("Account Verified");
+			return ResponseEntity.ok(new AuthenticationResponse("Account verified sucessfully"));
 		}
-		return new ResponseEntity<>("INVALID OR BROKEN LINK", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new AuthenticationResponse("INVALID OR BROKEN LINK"), HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(value = "/authenticate", method=RequestMethod.POST)
@@ -146,13 +145,9 @@ public class TestController {
 			final String token = jwtTokenUtil.generateToken(userDetails);
 			return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername())); 
 		}
-		return ResponseEntity.ok("Please confirm your email before logging in");
+		return ResponseEntity.ok(new AuthenticationResponse("Please confirm your email to complete the registration!"));
 	}
 	
-	@RequestMapping({"/helloadmin"})
-	public String helloAdmin() {
-		return "Hello Admin";
-	}
 	
 	@RequestMapping(value="/employees",method=RequestMethod.GET)
 	public ResponseEntity<List<Employee>> getAllEmployees(){
@@ -215,16 +210,17 @@ public class TestController {
 	}
 	
 	@RequestMapping(value="/workdays",method=RequestMethod.GET)
-	public ResponseEntity<List<Workday>> createWorkday(){
+	public ResponseEntity<List<Workday>> getWorkdays(@RequestParam("username")String username){
 		//TODO prikazati samo dane za trenutnog zaposlenika
 		try {
+			Employee employeeData = employeeRepository.findByUsername(username);
 			List<Workday> workdays = new ArrayList<Workday>();
-			workdayRepository.findAll().forEach(workdays::add);
-			
-			if(workdays.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			if(employeeData != null) {
+				workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
+				if(workdays.isEmpty()) {
+					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
 			}
-			
 			return new ResponseEntity<>(workdays,HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
