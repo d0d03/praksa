@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-
-import {backRoute} from '../routers/AppRouter';
 import { useHistory } from 'react-router-dom';
+
+import fetcher from '../actions/login';
 
 const RegisterPage = () => {
 
@@ -35,31 +35,15 @@ const RegisterPage = () => {
                 email
             });
             
-            fetch((backRoute.concat('register')),{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body
-            })
+            fetcher('/register',{method:'POST',body})
             .then((response) => {
-                if(response.ok){
-                    return response.text();
-                }else{
-                    throw new Error('Krivi podaci');
+                if(response!==null){
+                    console.log(response.text());
                 }
             })
-            .then(data => {
-                console.log(data);
-                history.push('/login');
-
-            })
-            .catch(error => {
-                alert(error);
-            })
         }
-        return false;
     }
-
-
+    
     return(
         <div>
             <form onSubmit={registerUser}>
@@ -70,9 +54,10 @@ const RegisterPage = () => {
                 <input type="password" placeholder="Repeat password" required value={matchingPassword} onChange={(e) => setMatchingPassword(e.target.value)}/>
                 <input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)}/>
                 <button>Register</button>
-            </form>
+                </form>
         </div>
     );
+
 }
 
 export { RegisterPage as default }

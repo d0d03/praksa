@@ -11,7 +11,7 @@ const Header = () => {
     return(
         <header>
             <h1>Punchin</h1>
-            <NavLink to="/" exact={true}>Dashboard</NavLink>
+            <NavLink to="/" activeClassName="is-active" exact={true}>Dashboard</NavLink>
             {user.token ?
                 <>
                     <NavLink to="/workdays">Workdays</NavLink>
@@ -21,8 +21,8 @@ const Header = () => {
                     }}>Log out</button>
                 </>:
                 <>
-                    <NavLink to="/register">Register</NavLink>
-                    <NavLink to="/login">Login</NavLink>
+                    <NavLink to="/register" activeClassName="is-active">Register</NavLink>
+                    <NavLink to="/login" activeClassName="is-active">Login</NavLink>
                 </>
             }
             

@@ -56,7 +56,7 @@ public class JwtAutorizationFilter extends BasicAuthenticationFilter {
 		try {
 			String token = header.replace("Bearer ", "");
 			
-			if(token!=null && !token.equals("null")) {
+			if(token!=null && jwtUtil.validateToken(token)) {
 				
 				String username = jwtUtil.getUsernameFromToken(token);
 				

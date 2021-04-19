@@ -12,34 +12,32 @@ import UserContext from '../context/user-context';
 import userReducer from '../reducers/users';
 
 const AppRouter = () => {
-    const [user,dispatchUser] = useReducer(userReducer,{username:'',token:''}); 
+    const [user,dispatchUser] = useReducer(userReducer,{}); 
     
     useEffect(()=>{
-        const token = localStorage.getItem('token');
-        if(token){
-            dispatchUser({type:'LOGIN',username:'dodo',token}); 
+        if(localStorage.token){
+            dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token}); 
         }     
     },[]);
 
-      
     return(
-        <BrowserRouter>
-            <UserContext.Provider value={{user, dispatchUser}}>
-                <Header />
-                <Switch>
-                    <Route path="/" component={DashboardPage} exact={true} />
-                    <Route path="/workdays" component={WorkdaysPage} />
-                    <Route path="/login" component={LoginPage} />
-                    <Route path="/register" component={RegisterPage} />
-                    <Route path="/confirm-account/:token" component={ConfirmationPage} />
-                    <Route component={NotFoundPage} />
-                </Switch>
-            </UserContext.Provider>
-        </BrowserRouter>
+        <UserContext.Provider value={{user,dispatchUser}}>
+            <BrowserRouter>
+                <div>
+                    <Header />
+                    <Switch>
+                        <Route path="/" component={DashboardPage} exact={true} />
+                        <Route path="/workdays" component={WorkdaysPage} />
+                        <Route path="/login" component={LoginPage} />
+                        <Route path="/register" component={RegisterPage} />
+                        <Route path="/confirm-account" component={ConfirmationPage} />
+                        <Route component={NotFoundPage} />
+                    </Switch>
+                </div>
+            </BrowserRouter>
+        </UserContext.Provider>
     );
-    
 };
 
-export const backRoute = "http://localhost:8080/";
 export { AppRouter as default }
 

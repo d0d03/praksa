@@ -6,8 +6,6 @@ const userReducer = (state, action) =>{
         case 'LOGOUT':
             localStorage.clear();
             return {...state,username:'',token:''};
-        case 'SET_USER_DATA':
-            return {...state, email:action.email };
         default:
             return state;
     }

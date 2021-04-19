@@ -1,14 +1,27 @@
-import React,{useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+
+import fetcher from '../actions/login';
 
 const ConfirmationPage = () => {
 
-    let location = useLocation();  
-    console.log(location);
+    const [confirmation, setConfirmation] = useState();
+    const location = useLocation();
+    const history = useHistory();
+    if(location.search.startsWith("?token=")){
+        fetcher(location.search,{})
+        .then(response=>{
+            if(response!==null){
+                console.log(response);
+            }
+        })
+    }else{
+        history.push('register');
+    }
 
     return(
         <div>
-            <p>Succesfully registrated</p>
+            
         </div>
     );
 };

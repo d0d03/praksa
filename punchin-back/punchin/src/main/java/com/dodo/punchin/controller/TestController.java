@@ -107,12 +107,12 @@ public class TestController {
 			mailMessage.setTo(employee.getEmail());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setFrom("dominik.bosnjak33@gmail.com");
-			mailMessage.setText("To confirm your account, please click here : " +
-			"http://localhost:3000/confirm-account/"+confirmationToken.getConfirmationToken());
+			mailMessage.setText("Hello " + employee.getUsername() +" !!! \nWE ARE SO GLAD TO HAVE YOU <3,\nTo confirm your account, please click here : " +
+			"http://localhost:3000?token=confirm-account"+confirmationToken.getConfirmationToken());
 			
 			emailSenderService.sendEmail(mailMessage);
 			
-			return ResponseEntity.ok("User registered successfuly");
+			return new ResponseEntity<>("User registered successfuly",HttpStatus.OK);
 			
 		}catch (MailException e) {
 			throw new Exception(e.getMessage());
@@ -144,7 +144,7 @@ public class TestController {
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		if(userDetails.isEnabled()) {
 			final String token = jwtTokenUtil.generateToken(userDetails);
-			return ResponseEntity.ok(new AuthenticationResponse(token)); 
+			return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername())); 
 		}
 		return ResponseEntity.ok("Please confirm your email before logging in");
 	}
