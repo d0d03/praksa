@@ -202,7 +202,7 @@ public class TestController {
 			if(username!=null) {
 				Employee  _employee= employeeRepository.findByUsername(username);
 				Workday _workday = workdayRepository.save(new Workday(LocalDate.parse(workday.getDate()),LocalTime.parse(workday.getStart()),LocalTime.parse(workday.getEnd()),LocalTime.parse(workday.getHours()),_employee,workday.getNote()));
-				return new ResponseEntity<>(_workday,HttpStatus.CREATED);
+				return new ResponseEntity<>(_workday,HttpStatus.OK);
 			}throw new UsernameNotFoundException("User not found with username " + username);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -218,7 +218,7 @@ public class TestController {
 			if(employeeData != null) {
 				workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
 				if(workdays.isEmpty()) {
-					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+					return new ResponseEntity<>(workdays,HttpStatus.OK);
 				}
 			}
 			return new ResponseEntity<>(workdays,HttpStatus.OK);
@@ -249,7 +249,7 @@ public class TestController {
 	public ResponseEntity<?> deleteWorkday(@PathVariable("id") long id){
 		try {
 			workdayRepository.deleteById(id);
-			return ResponseEntity.ok("Workday deleted!");
+			return ResponseEntity.ok(new AuthenticationResponse("Workday deleted!"));
 		}catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
