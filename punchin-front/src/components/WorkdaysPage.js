@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useReducer, useContext } from 'react';
-import { Spin } from 'antd';
+import { DatePicker, Spin } from 'antd';
+import moment from 'moment';
 import 'antd/dist/antd.css';
 
 import fetcher from '../actions/login';
@@ -14,16 +15,31 @@ const WorkdaysPage = () =>
     const {user} = useContext(UserContext);
     const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
     const [loader, setLoader] = useState(true);
-
+    const [filterStart, setFilterStart] = useState(moment().startOf('month').format('YYYY-MM-DD'));
+    const [filterEnd, setFilterEnd] = useState(moment().startOf('month').format('YYYY-MM-DD'));
+    const [filter,setFilter] = useState(moment());
+    //Promjenit u post rijesit satnja, i sql upit na backednu
     useEffect(()=>{
-        fetcher('/workdays?username=' + user.username,{method:'GET'})
+        const body = JSON.stringify({
+            username:user.username,
+            filterStart: filter.startOf('month').format('YYYY-MM-DD'), 
+            filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
+        })
+        console.log(body);
+        fetcher('/workdays?username=' + user.username + `&start=${filterStart}`,{method:'GET'})
         .then(response => {
             if(response.length !== 0){
                 dispatchWorkdays({type: 'POPULATE_WORKDAYS', workdays : response});
             }
-            setLoader(false);
-        })
-    },[user]);
+            setLoader(false); 
+        });
+    },[user,filter]);
+
+    const onFilterChange = (date) => {
+        if(date !== null){
+            setFilter(date);
+        }
+    }
  
     if(loader){
         return(
@@ -35,6 +51,7 @@ const WorkdaysPage = () =>
             
                 <div>
                     <h1>Workdays</h1>
+                    <DatePicker picker="month" onChange={onFilterChange} value={filter} defaultValue={moment()} allowClear={false} />
                     <WorkdayList />
                     <AddWorkdayForm />
                 </div>

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dodo.punchin.entities.ConfirmationToken;
@@ -42,9 +41,7 @@ import com.dodo.punchin.repository.ConfirmationTokenRepository;
 import com.dodo.punchin.services.CustomUserDetailsServices;
 import com.dodo.punchin.services.JwtUtil;
 import com.dodo.punchin.services.EmailSenderService;
-
-
-import javax.servlet.http.HttpServletRequest;
+import com.dodo.punchin.services.WorkdaysService;
 import javax.validation.Valid;
 
 @RestController
@@ -52,6 +49,9 @@ public class TestController {
 		
 	@Autowired
 	private CustomUserDetailsServices userDetailsService;
+	
+	@Autowired
+	private WorkdaysService ws;
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -130,9 +130,6 @@ public class TestController {
 		if(token!=null) {
 			Employee employee = employeeRepository.findByUsername(token.getEmployee().getUsername());
 			employee.setEnabled(true);
-//			Set<Role> roles = employee.getRoles();
-//			Role enabled = roleRepository.findByName(ERole.ROLE_ENABLED).orElseThrow(()->new RuntimeException("Error: Role is not found"));
-//			roles.add(enabled);
 			return ResponseEntity.ok(new AuthenticationResponse("Account verified sucessfully"));
 		}
 		return new ResponseEntity<>(new AuthenticationResponse("INVALID OR BROKEN LINK"), HttpStatus.BAD_REQUEST);
@@ -210,13 +207,15 @@ public class TestController {
 	}
 	
 	@RequestMapping(value="/workdays",method=RequestMethod.GET)
-	public ResponseEntity<List<Workday>> getWorkdays(@RequestParam("username")String username){
-		//TODO prikazati samo dane za trenutnog zaposlenika
+	public ResponseEntity<List<Workday>> getWorkdays(@RequestParam("username")String username, @RequestParam("start") String start){
 		try {
+			System.out.println(start);
+			//ws.findWorkdays(username, filter);
 			Employee employeeData = employeeRepository.findByUsername(username);
 			List<Workday> workdays = new ArrayList<Workday>();
 			if(employeeData != null) {
 				workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
+				
 				if(workdays.isEmpty()) {
 					return new ResponseEntity<>(workdays,HttpStatus.OK);
 				}
