@@ -15,8 +15,6 @@ const WorkdaysPage = () =>
     const {user} = useContext(UserContext);
     const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
     const [loader, setLoader] = useState(true);
-    const [filterStart, setFilterStart] = useState(moment().startOf('month').format('YYYY-MM-DD'));
-    const [filterEnd, setFilterEnd] = useState(moment().startOf('month').format('YYYY-MM-DD'));
     const [filter,setFilter] = useState(moment());
     //Promjenit u post rijesit satnja, i sql upit na backednu
     useEffect(()=>{
@@ -26,9 +24,9 @@ const WorkdaysPage = () =>
             filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
         })
         console.log(body);
-        fetcher('/workdays?username=' + user.username + `&start=${filterStart}`,{method:'GET'})
+        fetcher('/workdays',{method:'POST', body})
         .then(response => {
-            if(response.length !== 0){
+            if(response !== null){
                 dispatchWorkdays({type: 'POPULATE_WORKDAYS', workdays : response});
             }
             setLoader(false); 

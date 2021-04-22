@@ -53,6 +53,15 @@ public class Workday {
 		this.employee = employee;
 		this.note = note;
 	}
+	public Workday(Long id,LocalDate date, LocalTime start, LocalTime end, LocalTime hours, Employee employee, String note) {
+		this.id = id;
+		this.date = date;
+		this.start = start;
+		this.end = end;
+		this.hours = hours;
+		this.employee = employee;
+		this.note = note;
+	}
 
 	public Long getId() {
 		return id;

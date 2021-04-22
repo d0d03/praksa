@@ -34,6 +34,7 @@ import com.dodo.punchin.model.AuthenticationRequest;
 import com.dodo.punchin.model.AuthenticationResponse;
 import com.dodo.punchin.model.EmployeeDTO;
 import com.dodo.punchin.model.WorkdayDTO;
+import com.dodo.punchin.model.WorkdayRequest;
 import com.dodo.punchin.repository.RoleRepository;
 import com.dodo.punchin.repository.WorkdayRepository;
 import com.dodo.punchin.repository.EmployeeRepository;
@@ -206,16 +207,15 @@ public class TestController {
 		}
 	}
 	
-	@RequestMapping(value="/workdays",method=RequestMethod.GET)
-	public ResponseEntity<List<Workday>> getWorkdays(@RequestParam("username")String username, @RequestParam("start") String start){
+	@RequestMapping(value="/workdays",method=RequestMethod.POST)
+	public ResponseEntity<List<Workday>> getWorkdays(@RequestBody WorkdayRequest wReq){
 		try {
-			System.out.println(start);
-			//ws.findWorkdays(username, filter);
-			Employee employeeData = employeeRepository.findByUsername(username);
+			Employee employeeData = employeeRepository.findByUsername(wReq.getUsername());
+			
 			List<Workday> workdays = new ArrayList<Workday>();
 			if(employeeData != null) {
-				workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
-				
+				//workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
+				workdays = ws.findWorkdays(employeeData,wReq.getFilterStart(),wReq.getFilterEnd());
 				if(workdays.isEmpty()) {
 					return new ResponseEntity<>(workdays,HttpStatus.OK);
 				}
