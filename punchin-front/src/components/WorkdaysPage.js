@@ -16,14 +16,13 @@ const WorkdaysPage = () =>
     const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
     const [loader, setLoader] = useState(true);
     const [filter,setFilter] = useState(moment());
-    //Promjenit u post rijesit satnja, i sql upit na backednu
+
     useEffect(()=>{
         const body = JSON.stringify({
             username:user.username,
             filterStart: filter.startOf('month').format('YYYY-MM-DD'), 
             filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
         })
-        console.log(body);
         fetcher('/workdays',{method:'POST', body})
         .then(response => {
             if(response !== null){

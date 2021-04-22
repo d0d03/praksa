@@ -17,6 +17,17 @@ const workdaysReducer = (state, action) => {
             ];
         case 'REMOVE_WORKDAY':
             return state.filter((workday) => workday.id !== action.id)
+        case 'EDIT_WORKDAY':
+            return state.map((workday) => {
+                if(workday.id === action.id){
+                    return {
+                        ...workday,
+                        ...action.updates
+                    };
+                }else{
+                    return workday;
+                };
+            });
         default:
             return state;
     }

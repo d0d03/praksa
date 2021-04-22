@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { DatePicker, TimePicker, Space } from 'antd';
 import moment from 'moment';
-import { useHistory } from 'react-router-dom';
 
 import WorkdayContext from '../context/workdays-context';
 import fetcher from '../actions/login';
@@ -9,12 +8,12 @@ import fetcher from '../actions/login';
 const AddWorkdayForm = () => {
 
     const { dispatchWorkdays } = useContext(WorkdayContext);
-    const history = useHistory();
     const [date,setDate] = useState();
     const [start,setStart] = useState();
     const [end,setEnd] = useState();
     const [hours,setHours] = useState();
     const [note, setNote] = useState('');
+    const [error,setError] = useState('');
     const {RangePicker} = TimePicker;
 
     function onDateChange(date){
@@ -35,6 +34,7 @@ const AddWorkdayForm = () => {
     const addWorkday = (e) =>{
         e.preventDefault();
         if(date instanceof moment && start instanceof moment && end instanceof moment){
+            setError('');
             const body = JSON.stringify({
                 date: moment(date).format("YYYY-MM-DD"),
                 start: moment(start).format("HH:mm"),
@@ -57,16 +57,16 @@ const AddWorkdayForm = () => {
                 setStart(null);
                 setEnd(null);
                 setNote('');
-                history.push('/workdays');
             })
         }else{
-           alert("please fill out the required fields"); 
+           setError("please fill out the required fields"); 
         }
     }
 
     return(
         <div>
             <p>Add workday</p>
+            {error && <p>{error}</p>}
             <form onSubmit={addWorkday}>
                 <Space direction="vertical" size={12}>
                     <DatePicker value={date} onChange={onDateChange} />
