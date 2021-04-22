@@ -44,6 +44,9 @@ public class Employee {
 	
 	@Column
 	private String email;
+	
+	@Column
+	private int maxHours;
 
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Workday> workdays = new ArrayList<>();
@@ -59,15 +62,24 @@ public class Employee {
 
 	public Employee() {}
 	
-	public Employee(String firstName, String lastName, String username, String password, String email) {
+	public Employee(String firstName, String lastName, String username, String password, String email, int maxHours) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.enabled = false;
+		this.maxHours = maxHours;
 	}
 
+	public int getMaxHours() {
+		return maxHours;
+	}
+
+	public void setMaxHours(int maxHours) {
+		this.maxHours = maxHours;
+	}
+	
 	public long getId() {
 		return id;
 	}

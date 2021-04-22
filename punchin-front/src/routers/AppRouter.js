@@ -7,7 +7,6 @@ import NotFoundPage from '../components/NotFoundPage';
 import WorkdaysPage from '../components/WorkdaysPage';
 import LoginPage from '../components/LoginPage';
 import RegisterPage from '../components/RegisterPage';
-import EditWorkdayPage from '../components/EditWorkdayPage';
 import ConfirmationPage from '../components/ConfirmationPage';
 import UserContext from '../context/user-context';
 import userReducer from '../reducers/users';
@@ -29,7 +28,6 @@ const AppRouter = () => {
                     <Switch>
                         <Route path="/" component={DashboardPage} exact={true} />
                         <Route path="/workdays" component={WorkdaysPage} exact={true}/>
-                        <Route path="/workdays/:id" component={EditWorkdayPage} />
                         <Route path="/login" component={LoginPage} />
                         <Route path="/register" component={RegisterPage} />
                         <Route path="/confirm-account" component={ConfirmationPage} />

@@ -11,6 +11,7 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [matchingPassword, setMatchingPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [maxHours,setMaxHours] = useState();
     const[success, setSuccess] = useState(false);
 
     const matchPasswords = () =>{
@@ -32,7 +33,8 @@ const RegisterPage = () => {
                 username,
                 password,
                 matchingPassword,
-                email
+                email,
+                maxHours
             });
             
             fetcher('/register',{method:'POST',body})
@@ -59,7 +61,8 @@ const RegisterPage = () => {
                 <input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
                 <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <input type="password" placeholder="Repeat password" required value={matchingPassword} onChange={(e) => setMatchingPassword(e.target.value)}/>
-                <input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="number" placeholder="Workd duration" required value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
                 <button>Register</button>
                 </form>
         </div>

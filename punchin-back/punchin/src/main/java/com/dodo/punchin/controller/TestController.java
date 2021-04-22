@@ -52,7 +52,7 @@ public class TestController {
 	private CustomUserDetailsServices userDetailsService;
 	
 	@Autowired
-	private WorkdaysService ws;
+	private WorkdaysService workdayService;
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -146,7 +146,6 @@ public class TestController {
 		return ResponseEntity.ok(new AuthenticationResponse("Please confirm your email to complete the registration!"));
 	}
 	
-	
 	@RequestMapping(value="/employees",method=RequestMethod.GET)
 	public ResponseEntity<List<Employee>> getAllEmployees(){
 		try {
@@ -163,15 +162,22 @@ public class TestController {
 		}
 	}
 	
-	@RequestMapping(value="/employees/{id}",method=RequestMethod.GET)
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") String id ){
-		Employee employeeData = employeeRepository.findByUsername(id);
-		
+	@RequestMapping(value="/employees/{username}",method=RequestMethod.GET)
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable("username") String username ){
+		Employee employeeData = employeeRepository.findByUsername(username);
 		if(employeeData != null) {
 			return new ResponseEntity<>(employeeData,HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@RequestMapping(value="/progress/{username}",method=RequestMethod.GET)
+	public ResponseEntity<Double> getEmployeeProgress(@PathVariable("username") String username ){
+		Employee employeeData = employeeRepository.findByUsername(username);
+		Double employeeProgress = workdayService.getProgress(employeeData); 
+		return new ResponseEntity<>(employeeProgress,HttpStatus.OK);
+		//return ResponseEntity.ok(employeeProgress);
 	}
 	
 	@Transactional
@@ -215,7 +221,7 @@ public class TestController {
 			List<Workday> workdays = new ArrayList<Workday>();
 			if(employeeData != null) {
 				//workdayRepository.findUsersWorkdays(employeeData.getId()).forEach(workdays::add);
-				workdays = ws.findWorkdays(employeeData,wReq.getFilterStart(),wReq.getFilterEnd());
+				workdays = workdayService.findWorkdays(employeeData,wReq.getFilterStart(),wReq.getFilterEnd());
 				if(workdays.isEmpty()) {
 					return new ResponseEntity<>(workdays,HttpStatus.OK);
 				}

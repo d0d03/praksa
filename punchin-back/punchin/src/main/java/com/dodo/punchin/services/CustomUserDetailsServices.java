@@ -47,6 +47,7 @@ public class CustomUserDetailsServices implements UserDetailsService {
 	
 	public Employee save(EmployeeDTO employee, Set<Role> roles) {
 		Employee newEmployee = new Employee();
+		newEmployee.setMaxHours(employee.getMaxHours());
 		newEmployee.setRoles(roles);
 		newEmployee.setEnabled(false);
 		newEmployee.setFirstName(employee.getFirstName());

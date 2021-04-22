@@ -12,7 +12,7 @@ const Workday = ({ workday }) => {
     const [date,setDate] = useState(moment(workday.date));
     const [start,setStart] = useState(moment(workday.start,"HH:mm"));
     const [end,setEnd] = useState(moment(workday.end,"HH:mm"));
-    const [hours,setHours] = useState();
+    const [hours,setHours] = useState(undefined);
     const [note, setNote] = useState(workday.note.trim());
     const {RangePicker} = TimePicker;
 
@@ -43,6 +43,11 @@ const Workday = ({ workday }) => {
     }
 
     const showModal = () => {
+        setDate(moment(workday.date));
+        setStart(moment(workday.start,"HH:mm"));
+        setEnd(moment(workday.end,"HH:mm"));
+        setHours(undefined);
+        setNote(workday.note.trim());
         setVisible(true);
     }
 

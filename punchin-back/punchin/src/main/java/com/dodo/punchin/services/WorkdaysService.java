@@ -1,5 +1,6 @@
 package com.dodo.punchin.services;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -38,4 +39,15 @@ public class WorkdaysService {
 		return temp;
 	}
 	
+	public Double getProgress(Employee employee) {
+		int maxWorkHours = jdbc.queryForObject("SELECT max_hours FROM employees e WHERE e.id = ?", new Object[] {employee.getId()},int.class);
+		String hoursWorked = jdbc.queryForObject("SELECT SUM(workday_hours) FROM workdays WHERE employee_id = ?", new Object[] {employee.getId()},String.class);
+		String _temp = hoursWorked.substring(0,5).replace(":", ".");
+		
+		Double time = Double.parseDouble(_temp);
+		Double minutes = time * 60;
+		
+		Double progress = minutes/(maxWorkHours *60);
+		return progress;
+	}
 }

@@ -38,7 +38,17 @@ public class EmployeeDTO {
 	@NotEmpty
 	private String email;
 	
+	@NotNull
+	private int maxHours;
+	
 	private Set<String> roles;
+	
+	public int getMaxHours() {
+		return maxHours;
+	}
+	public void setMaxHours(int maxHours) {
+		this.maxHours = maxHours;
+	}
 	
 	public String getFirstName() {
 		return firstName;
