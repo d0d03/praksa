@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useReducer, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { DatePicker, Spin } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
 
 import fetcher from '../actions/login';
-import workdaysReducer from '../reducers/workdays';
 import WorkdayList from './WorkdayList';
 import AddWorkdayForm from './AddWorkdayForm';
 import WorkdayContext from '../context/workdays-context';
@@ -13,7 +12,7 @@ import UserContext from '../context/user-context';
 const WorkdaysPage = () => 
 {   
     const {user} = useContext(UserContext);
-    const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
+    const {workdays, dispatchWorkdays} = useContext(WorkdayContext);
     const [loader, setLoader] = useState(true);
     const [filter,setFilter] = useState(moment());
 

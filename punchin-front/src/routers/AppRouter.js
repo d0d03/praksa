@@ -10,9 +10,12 @@ import RegisterPage from '../components/RegisterPage';
 import ConfirmationPage from '../components/ConfirmationPage';
 import UserContext from '../context/user-context';
 import userReducer from '../reducers/users';
+import WorkdayContext from '../context/workdays-context';
+import workdaysReducer from '../reducers/workdays';
 
 const AppRouter = () => {
     const [user,dispatchUser] = useReducer(userReducer,{}); 
+    const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
     
     useEffect(()=>{
         if(localStorage.token){
@@ -22,19 +25,21 @@ const AppRouter = () => {
 
     return(
         <UserContext.Provider value={{user,dispatchUser}}>
-            <BrowserRouter>
-                <div>
-                    <Header />
-                    <Switch>
-                        <Route path="/" component={DashboardPage} exact={true} />
-                        <Route path="/workdays" component={WorkdaysPage} exact={true}/>
-                        <Route path="/login" component={LoginPage} />
-                        <Route path="/register" component={RegisterPage} />
-                        <Route path="/confirm-account" component={ConfirmationPage} />
-                        <Route component={NotFoundPage} />
-                    </Switch>
-                </div>
-            </BrowserRouter>
+            <WorkdayContext.Provider value={{workdays,dispatchWorkdays}}>
+                <BrowserRouter>
+                    <div>
+                        <Header />
+                        <Switch>
+                            <Route path="/" component={DashboardPage} exact={true} />
+                            <Route path="/workdays" component={WorkdaysPage} exact={true}/>
+                            <Route path="/login" component={LoginPage} />
+                            <Route path="/register" component={RegisterPage} />
+                            <Route path="/confirm-account" component={ConfirmationPage} />
+                            <Route component={NotFoundPage} />
+                        </Switch>
+                    </div>
+                </BrowserRouter>
+            </WorkdayContext.Provider>
         </UserContext.Provider>
     );
 };

@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import { Space, Modal, Button, DatePicker, TimePicker } from 'antd';
 import moment from 'moment';
+
 import WorkdayContext from '../context/workdays-context';
 import fetcher from '../actions/login';
 
@@ -60,7 +61,6 @@ const Workday = ({ workday }) => {
             hours : moment(hours).subtract(1,'hour').format("HH:mm"),
             note:note.trim(),
         });
-        console.log(body);
         fetcher(`/workday/${workday.id}`,{method:'PUT', body})
         .then(response => {
             console.log(response);
