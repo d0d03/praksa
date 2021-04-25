@@ -1,13 +1,15 @@
-import React, { useEffect, useState  } from 'react';
+import React, { useEffect, useState, useContext  } from 'react';
 import { Progress } from 'antd';
 
 
 import fetcher from '../actions/login';
 import PunchinClock from './PunchinClock';
+import WorkdayContext from '../context/workdays-context';
 
 const DashboardPage = () => {
 
     const [progress,setProgress] = useState();
+    const {workdays} = useContext(WorkdayContext);
 
     useEffect(()=>{
         fetcher(`/progress/${localStorage.username}`,{method:'GET'})
@@ -16,7 +18,7 @@ const DashboardPage = () => {
                 setProgress(parseInt(response * 100));
             }
         })
-    },[])
+    },[workdays]);
 
     return(
         <div>

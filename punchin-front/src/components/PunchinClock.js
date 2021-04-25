@@ -6,7 +6,6 @@ import moment from 'moment';
 import fetcher from '../actions/login';
 import WorkdayContext from '../context/workdays-context';
 
-
 const PunchinClock = () => {
 
     const { dispatchWorkdays } = useContext(WorkdayContext); 
@@ -56,13 +55,13 @@ const PunchinClock = () => {
                 setStart(null);
             });
             setDsiplay('Punch in');
-            timer.stop(); 
+            timer.pause(); 
         }
     }
 
     return(
         <div>
-            <Progress type='circle' percent={(time)*3*(100/24)} format={percent => display} onClick={handleTime}/>
+            <Progress type='circle' percent={(time)*3*(100/24)} format={()=>display} onClick={handleTime}/>
         </div>
         
     );
