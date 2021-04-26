@@ -20,7 +20,6 @@ const AppRouter = () => {
     
     useEffect(()=>{
         if(localStorage.token){
-            console.log("tu ubacujemo: " + localStorage.roles)
             dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token,roles:localStorage.roles}); 
         }     
     },[]);
@@ -37,6 +36,7 @@ const AppRouter = () => {
                             <Route path="/login" component={LoginPage} />
                             <Route path="/register" component={RegisterPage} />
                             <Route path="/employees" component={EmployeesPage} />
+                            <Route path="/workdays/:username" component={WorkdaysPage} />
                             <Route path="/confirm-account" component={ConfirmationPage} />
                             <Route component={NotFoundPage} />
                         </Switch>

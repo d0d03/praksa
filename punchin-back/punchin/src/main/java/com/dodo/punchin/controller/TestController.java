@@ -230,9 +230,13 @@ public class TestController {
 				if(workdays.isEmpty()) {
 					return new ResponseEntity<>(workdays,HttpStatus.OK);
 				}
+				return new ResponseEntity<>(workdays,HttpStatus.OK);
 			}
-			return new ResponseEntity<>(workdays,HttpStatus.OK);
+			throw new Exception("No user found!");
 		} catch (Exception e) {
+			if(e.getMessage() == "No user found") {
+				return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			}
 			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

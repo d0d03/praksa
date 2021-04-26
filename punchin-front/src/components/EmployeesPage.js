@@ -18,7 +18,8 @@ const EmployeesPage = () => {
                     id:employee.id, 
                     firstName:employee.firstName, 
                     lastName:employee.lastName,
-                    maxHours:employee.maxHours
+                    maxHours:employee.maxHours,
+                    username:employee.username
                 });
             });
         });

@@ -9,7 +9,7 @@ import AddWorkdayForm from './AddWorkdayForm';
 import WorkdayContext from '../context/workdays-context';
 import UserContext from '../context/user-context';
 
-const WorkdaysPage = () => 
+const WorkdaysPage = (props) => 
 {   
     const {user} = useContext(UserContext);
     const {workdays, dispatchWorkdays} = useContext(WorkdayContext);
@@ -18,8 +18,8 @@ const WorkdaysPage = () =>
 
     useEffect(()=>{
         const body = JSON.stringify({
-            username:user.username,
-            filterStart: filter.startOf('month').format('YYYY-MM-DD'), 
+            username: (props.match.params.username ? props.match.params.username : user.username),
+            filterStart: filter.startOf('month').format('YYYY-MM-DD'),
             filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
         })
         fetcher('/workdays',{method:'POST', body})
@@ -46,10 +46,10 @@ const WorkdaysPage = () =>
         <WorkdayContext.Provider value={{ workdays, dispatchWorkdays }}>
             
                 <div>
-                    <h1>Workdays</h1>
+                    <h1>{props.match.params.username} Workdays</h1>
                     <DatePicker picker="month" onChange={onFilterChange} value={filter} defaultValue={moment()} allowClear={false} />
                     <WorkdayList />
-                    <AddWorkdayForm />
+                    {!props.match.params.username && <AddWorkdayForm />}
                 </div>
             
         </WorkdayContext.Provider>

@@ -7,7 +7,8 @@ const employeesReducer = (state,action) => {
                     id:action.id,
                     firstName:action.firstName,
                     lastName: action.lastName,
-                    maxHours: action.maxHours, 
+                    maxHours: action.maxHours,
+                    username: action.username 
                 }
             ];
         case 'REMOVE_EMPLOYEE':

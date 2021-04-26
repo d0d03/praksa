@@ -31,7 +31,7 @@ const Workday = ({ workday }) => {
             setEnd(null);
         }
     }
-
+    
     const removeWorkday = (id) => {
         setLoading(true);
         fetcher('/workday/'+ id,{method:'DELETE'})
