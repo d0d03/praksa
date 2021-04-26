@@ -12,6 +12,7 @@ import UserContext from '../context/user-context';
 import userReducer from '../reducers/users';
 import WorkdayContext from '../context/workdays-context';
 import workdaysReducer from '../reducers/workdays';
+import EmployeesPage from '../components/EmployeesPage';
 
 const AppRouter = () => {
     const [user,dispatchUser] = useReducer(userReducer,{}); 
@@ -19,7 +20,8 @@ const AppRouter = () => {
     
     useEffect(()=>{
         if(localStorage.token){
-            dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token}); 
+            console.log("tu ubacujemo: " + localStorage.roles)
+            dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token,roles:localStorage.roles}); 
         }     
     },[]);
 
@@ -34,6 +36,7 @@ const AppRouter = () => {
                             <Route path="/workdays" component={WorkdaysPage} exact={true}/>
                             <Route path="/login" component={LoginPage} />
                             <Route path="/register" component={RegisterPage} />
+                            <Route path="/employees" component={EmployeesPage} />
                             <Route path="/confirm-account" component={ConfirmationPage} />
                             <Route component={NotFoundPage} />
                         </Switch>

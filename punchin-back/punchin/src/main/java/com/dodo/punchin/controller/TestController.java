@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -141,7 +142,11 @@ public class TestController {
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		if(userDetails.isEnabled()) {
 			final String token = jwtTokenUtil.generateToken(userDetails);
-			return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername())); 
+			Set<String> roles = new HashSet<>();
+			userDetails.getAuthorities().forEach(role->{
+				roles.add(role.toString());
+			});
+			return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername(),roles)); 
 		}
 		return ResponseEntity.ok(new AuthenticationResponse("Please confirm your email to complete the registration!"));
 	}

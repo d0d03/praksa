@@ -25,7 +25,7 @@ const LoginPage = () => {
                     if(response.message!==null){
                         setSucess(false);
                     }else{
-                        dispatchUser({type:'LOGIN',username,token:response.token});
+                        dispatchUser({type:'LOGIN',username,token:response.token,roles:response.roles});
                         history.push('/');
                     }
                 }
