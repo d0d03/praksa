@@ -14,22 +14,13 @@ const PunchinClock = () => {
     const [time,setTime] = useState('');
     const [date,setDate] = useState();
     const [start,setStart] = useState();
-    const [display,setDsiplay] = useState('Punhic in');
+    const [display,setDsiplay] = useState('Punch in');
 
     timer.addEventListener("secondsUpdated",()=>{
         setTime(parseFloat((timer.getTimeValues().toString()).replace(":",".")));
         setDsiplay(`${timer.getTimeValues().toString()}`);
         //localStorage.setItem("runningTime",JSON.stringify(timer.getTimeValues()));
     });
-
-    // useEffect(()=>{
-    //     if(JSON.parse(localStorage.running)){
-    //         console.log(timer.getTotalTimeValues());
-    //         timer.start({startValues:JSON.parse(localStorage.runningTime)});
-    //     }else{
-    //         console.log(localStorage.running);
-    //     }
-    // },[])
 
     const handleTime = (e) => {
         e.preventDefault();
@@ -64,7 +55,6 @@ const PunchinClock = () => {
                 })
                 setDate(null);
                 setStart(null);
-                
             });
             setDsiplay('Punch in');
             timer.stop(); 

@@ -24,11 +24,15 @@ const DashboardPage = () => {
         {localStorage.token ?
 
             <div className="content-container">
-                <p>Punch in and start your workday!</p>
-                <Space className="page__content">
-                    <Progress percent={progress} size="small" type="circle" status={progress>=100 ? "success" : "active"} />
+                <div className="widget-header">
+                    <h3>Your Progress</h3>
+                    <div style={{width:120}}>
+                        <Progress percent={progress} size="small" type="line" status={progress>=100 ? "success" : "active"} />
+                    </div>
+                </div>
+                <div className="widget-body">
                     <PunchinClock />
-                </Space>
+                </div>
             </div>
             :
             <p>You are Anonymouse, plese reveal yourself by logging in</p>

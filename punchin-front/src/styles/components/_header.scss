@@ -4,6 +4,11 @@ header {
     padding: $m-size 0;
     color:white;
 }
+.header-container{
+    margin: 0 auto;
+    padding: 0 $m-size;
+    max-width: 60rem;
+}
 
 .header__content{
     align-items: center;
@@ -15,7 +20,7 @@ header {
 .header__title{
     text-decoration: none;
     h1{
-        color:$cream;
+        color:white;
         font-weight: bold;
         margin:0;
     }
@@ -26,9 +31,9 @@ header {
 }
 
 .nav-link{
-    color:$cream;
+    color:white;
 }
 
 .nav-link:hover{
-    color:white;
+    color:$cream;
 }

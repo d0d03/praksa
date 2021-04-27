@@ -27,9 +27,9 @@ const WorkdaysPage = (props) =>
             if(response !== null){
                 dispatchWorkdays({type: 'POPULATE_WORKDAYS', workdays : response});
             }
-            setLoader(false); 
+            setLoader(false);
         });
-    },[user,filter]);
+    },[user,filter,props]);
 
     const onFilterChange = (date) => {
         if(date !== null){
@@ -44,14 +44,16 @@ const WorkdaysPage = (props) =>
     }
     return(
         <WorkdayContext.Provider value={{ workdays, dispatchWorkdays }}>
-            
-                <div>
+            <div className="workday-container">
+                <div className="container-header">
                     <h1>{props.match.params.username} Workdays</h1>
                     <DatePicker picker="month" onChange={onFilterChange} value={filter} defaultValue={moment()} allowClear={false} />
+                </div>    
+                <div className="container-body">
                     <WorkdayList />
-                    {!props.match.params.username && <AddWorkdayForm />}
                 </div>
-            
+                {props.match.params.username===undefined && <AddWorkdayForm />}
+            </div>
         </WorkdayContext.Provider>
     );
 };

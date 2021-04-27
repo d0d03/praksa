@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { DatePicker, TimePicker, Space } from 'antd';
+import React, { useState, useContext, useEffect } from 'react';
+import { DatePicker, TimePicker, Space, Button } from 'antd';
 import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
@@ -13,7 +13,7 @@ const AddWorkdayForm = () => {
     const [end,setEnd] = useState();
     const [hours,setHours] = useState();
     const [note, setNote] = useState('');
-    const [error,setError] = useState('');
+    const [disabled,setDisabled]=useState(true);
     const {RangePicker} = TimePicker;
 
     function onDateChange(date){
@@ -31,10 +31,17 @@ const AddWorkdayForm = () => {
         }
     }
 
+    useEffect(()=>{
+        if(date&&start&&end !==undefined){
+            setDisabled(false);
+        }else{
+            setDisabled(true);
+        }
+    })
+
     const addWorkday = (e) =>{
         e.preventDefault();
         if(date instanceof moment && start instanceof moment && end instanceof moment){
-            setError('');
             const body = JSON.stringify({
                 date: moment(date).format("YYYY-MM-DD"),
                 start: moment(start).format("HH:mm"),
@@ -59,23 +66,23 @@ const AddWorkdayForm = () => {
                 setEnd(null);
                 setNote('');
             })
-        }else{
-           setError("please fill out the required fields"); 
         }
     }
 
     return(
         <div>
-            <p>Add workday</p>
-            {error && <p>{error}</p>}
-            <form onSubmit={addWorkday}>
-                <Space direction="vertical" size={12}>
-                    <DatePicker value={date} onChange={onDateChange} />
-                    <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
-                    <textarea value={note} onChange={(e) => setNote(e.target.value)}/>
-                    <button>Add workday</button>
-                </Space>  
-            </form>
+            <div className="myForm">
+                <form onSubmit={addWorkday}>
+                <Space direction="vertical">
+                    <Space>
+                        <DatePicker value={date} onChange={onDateChange} />
+                        <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
+                    </Space>
+                    <textarea className="noteInput" value={note} onChange={(e) => setNote(e.target.value)}/>
+                    <Button disabled={disabled} htmlType="submit" type="primary">Add workday</Button> 
+                </Space>
+                </form>
+            </div>
         </div>
     );
 }

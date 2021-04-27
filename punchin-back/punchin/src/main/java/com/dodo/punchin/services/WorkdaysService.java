@@ -24,7 +24,7 @@ public class WorkdaysService {
 	public List<Workday> findWorkdays(Employee employee, String start, String end){
 		Long id = employee.getId();
 		List<Workday> temp = 
-		jdbc.query("SELECT * FROM workdays w WHERE w.employee_id = ? AND w.workday_date between ?::date and ?::date;", new Object[] {id,start,end},(rs,rowNum)->
+		jdbc.query("SELECT * FROM workdays w WHERE w.employee_id = ? AND w.workday_date between ?::date and ?::date ORDER BY w.workday_date", new Object[] {id,start,end},(rs,rowNum)->
 			new Workday(
 					rs.getLong("id"),
 					LocalDate.parse(rs.getString("workday_date")),
