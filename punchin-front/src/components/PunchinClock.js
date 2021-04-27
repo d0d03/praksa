@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import useTimer from 'easytimer-react-hook';
 import { Progress } from 'antd';
 import moment from 'moment';
@@ -8,7 +8,7 @@ import WorkdayContext from '../context/workdays-context';
 
 const PunchinClock = () => {
 
-    const { dispatchWorkdays } = useContext(WorkdayContext); 
+    const { dispatchWorkdays } = useContext(WorkdayContext);
     const [timer] = useTimer();
     const [toggle,setToggle] = useState(true);
     const [time,setTime] = useState('');
@@ -19,11 +19,22 @@ const PunchinClock = () => {
     timer.addEventListener("secondsUpdated",()=>{
         setTime(parseFloat((timer.getTimeValues().toString()).replace(":",".")));
         setDsiplay(`${timer.getTimeValues().toString()}`);
+        //localStorage.setItem("runningTime",JSON.stringify(timer.getTimeValues()));
     });
+
+    // useEffect(()=>{
+    //     if(JSON.parse(localStorage.running)){
+    //         console.log(timer.getTotalTimeValues());
+    //         timer.start({startValues:JSON.parse(localStorage.runningTime)});
+    //     }else{
+    //         console.log(localStorage.running);
+    //     }
+    // },[])
 
     const handleTime = (e) => {
         e.preventDefault();
         setToggle(true);
+        //localStorage.setItem('running',JSON.stringify(true));
         if(toggle){
             setDate(moment().format("YYYY-MM-DD"));
             setStart(moment().format("HH:mm"));
@@ -53,15 +64,17 @@ const PunchinClock = () => {
                 })
                 setDate(null);
                 setStart(null);
+                
             });
             setDsiplay('Punch in');
-            timer.pause(); 
+            timer.stop(); 
+            //localStorage.setItem('running',JSON.stringify(false));
         }
     }
 
     return(
         <div>
-            <Progress type='circle' percent={(time)*3*(100/24)} format={()=>display} onClick={handleTime}/>
+            <Progress className="clock" type='circle' percent={(time)*3*(100/24)} format={()=>display} onClick={handleTime}/>
         </div>
         
     );

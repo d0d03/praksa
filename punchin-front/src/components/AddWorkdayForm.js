@@ -44,6 +44,7 @@ const AddWorkdayForm = () => {
             });
             fetcher('/workday',{method: 'POST', body})
             .then(response => {
+                console.log(moment(response.hours,"HH:mm:ss").format("HH:mm"));
                 dispatchWorkdays({
                     type:'ADD_WORKDAY',
                     id: response.id,

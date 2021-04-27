@@ -4,3 +4,4 @@ antd
 moment
 easytimer-react-hook
 easytimer.js
+node-sass

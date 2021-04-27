@@ -18,7 +18,7 @@ const WorkdaysPage = (props) =>
 
     useEffect(()=>{
         const body = JSON.stringify({
-            username: (props.match.params.username ? props.match.params.username : user.username),
+            username: (props.match.params.username === undefined ? localStorage.username : props.match.params.username),
             filterStart: filter.startOf('month').format('YYYY-MM-DD'),
             filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
         })

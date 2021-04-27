@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext  } from 'react';
-import { Progress } from 'antd';
-
+import { Progress, Space } from 'antd';
 
 import fetcher from '../actions/login';
 import PunchinClock from './PunchinClock';
@@ -24,10 +23,12 @@ const DashboardPage = () => {
         <div>
         {localStorage.token ?
 
-            <div style={{ width: 170 }}>
-                <p>You are now logged in as: {localStorage.username}</p>
-                <Progress percent={progress} size="small" status={progress>=100 ? "success" : "active"} />
-                <PunchinClock />
+            <div className="content-container">
+                <p>Punch in and start your workday!</p>
+                <Space className="page__content">
+                    <Progress percent={progress} size="small" type="circle" status={progress>=100 ? "success" : "active"} />
+                    <PunchinClock />
+                </Space>
             </div>
             :
             <p>You are Anonymouse, plese reveal yourself by logging in</p>

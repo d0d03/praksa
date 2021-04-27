@@ -74,7 +74,7 @@ const Workday = ({ workday }) => {
         <div>
             <Space>
                 <h3>{workday.date}</h3>
-                <p>Start {workday.start} - End {workday.end}</p>
+                <p>Start {moment(workday.start,"HH:mm:ss").format("HH:mm")} - End {workday.end}</p>
                 <p> | Hours worked {workday.hours} </p>
                 <Modal 
                     visible={visible}
