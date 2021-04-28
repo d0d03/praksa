@@ -7,7 +7,6 @@ import fetcher from '../actions/login';
 
 const Workday = ({ workday }) => {
 
-    const [loading,setLoading] = useState(false);
     const [loadingE,setLoadingE] = useState(false);
     const [loadingR,setLoadingR] = useState(false);
     const { dispatchWorkdays } = useContext(WorkdayContext);
@@ -107,7 +106,7 @@ const Workday = ({ workday }) => {
                     okText="SAVE"
                     onOk={editWorkday}
                     onCancel={()=>{setVisible(false)}}
-                    confirmLoading={loading}
+                    confirmLoading={loadingE}
                 > 
                 <div  className="myForm">
                     <Space direction="vertical">

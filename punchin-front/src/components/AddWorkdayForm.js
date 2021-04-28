@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { DatePicker, TimePicker, Space, Button } from 'antd';
+import { DatePicker, TimePicker, Space, Button, notification } from 'antd';
 import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
@@ -37,7 +37,7 @@ const AddWorkdayForm = () => {
         }else{
             setDisabled(true);
         }
-    })
+    },[date,start,end])
 
     const addWorkday = (e) =>{
         e.preventDefault();
@@ -65,6 +65,9 @@ const AddWorkdayForm = () => {
                 setStart(null);
                 setEnd(null);
                 setNote('');
+            })
+            notification['success']({
+                message:"Workday saved"
             })
         }
     }

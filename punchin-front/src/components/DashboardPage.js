@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext  } from 'react';
-import { Progress, Space } from 'antd';
+import { Progress } from 'antd';
 
 import fetcher from '../actions/login';
 import PunchinClock from './PunchinClock';

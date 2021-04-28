@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import useTimer from 'easytimer-react-hook';
-import { Progress } from 'antd';
+import { Progress, notification } from 'antd';
 import moment from 'moment';
 
 import fetcher from '../actions/login';
@@ -43,7 +43,6 @@ const PunchinClock = () => {
             });
             fetcher('/workday',{method: 'POST', body})
             .then(response => {
-                console.log(response);
                 dispatchWorkdays({
                     type:'ADD_WORKDAY',
                     id: response.id,
@@ -59,6 +58,9 @@ const PunchinClock = () => {
             setDsiplay('Punch in');
             timer.stop(); 
             //localStorage.setItem('running',JSON.stringify(false));
+            notification['success']({
+                message:"Workday saved"
+            })
         }
     }
 
