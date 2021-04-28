@@ -1,5 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Space, Modal, Button, DatePicker, TimePicker, Collapse, notification } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
@@ -7,6 +8,7 @@ import fetcher from '../actions/login';
 
 const Workday = ({ workday }) => {
 
+    const [disabled,setDisabled] = useState(true);
     const [loadingE,setLoadingE] = useState(false);
     const [loadingR,setLoadingR] = useState(false);
     const { dispatchWorkdays } = useContext(WorkdayContext);
@@ -18,6 +20,15 @@ const Workday = ({ workday }) => {
     const [note, setNote] = useState(workday.note.trim());
     const {RangePicker} = TimePicker;
     const {Panel} = Collapse;
+    const {confirm} = Modal;
+
+    useEffect(()=>{
+        if(start && end && date){
+            setDisabled(false);
+        }else{
+            setDisabled(true);
+        }
+    },[start,end,date]);
 
     function onDateChange(date){
         setDate(date);
@@ -43,9 +54,9 @@ const Workday = ({ workday }) => {
             setLoadingR(false);
             }
         );
-        notification['warn']({
+        notification['success']({
             message:'Workday deleted',
-            description:'Workday you selected whas successfuly deleted. This can not be undone'
+            description:'Workday you selected whas successfuly deleted.'
         });
     }
 
@@ -53,7 +64,7 @@ const Workday = ({ workday }) => {
         setDate(moment(workday.date));
         setStart(moment(workday.start,"HH:mm"));
         setEnd(moment(workday.end,"HH:mm"));
-        setHours(undefined);
+        setHours(moment(end-start));
         setNote(workday.note.trim());
         setVisible(true);
     }
@@ -80,14 +91,32 @@ const Workday = ({ workday }) => {
         
     }
 
+    function showDeleteConfirm() {
+        confirm({
+          title: 'Are you sure you want to delete this workday?',
+          icon: <ExclamationCircleOutlined />,
+          content: 'This cannot be undone!',
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk() {
+            removeWorkday(workday.id);
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+      }
+
+    //   ()=> removeWorkday(workday.id)
+
     const btnExtra = () => (
         <Space>
             <Button onClick={showModal} loading={loadingE}>Edit</Button>
-            <Button danger loading={loadingR} onClick={()=> removeWorkday(workday.id)}>x</Button>
+            <Button danger loading={loadingR} onClick={showDeleteConfirm}>x</Button>
         </Space>
     );
    
-
     return (
         <div>
                 <Collapse accordion ghost>
@@ -107,6 +136,7 @@ const Workday = ({ workday }) => {
                     onOk={editWorkday}
                     onCancel={()=>{setVisible(false)}}
                     confirmLoading={loadingE}
+                    okButtonProps= {{ disabled: disabled}}
                 > 
                 <div  className="myForm">
                     <Space direction="vertical">

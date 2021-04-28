@@ -14,14 +14,15 @@ import WorkdayContext from '../context/workdays-context';
 import workdaysReducer from '../reducers/workdays';
 import EmployeesPage from '../components/EmployeesPage';
 import HomePage from '../components/HomePage';
+import UnauthorizedPage from '../components/UnauthorizedPage';
 
 const AppRouter = () => {
     const [user,dispatchUser] = useReducer(userReducer,{}); 
     const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
-    
+
     useEffect(()=>{
         if(localStorage.token){
-            dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token,roles:localStorage.roles}); 
+            dispatchUser({type:'LOGIN',username:localStorage.username,token:localStorage.token,roles:localStorage.roles});
         }     
     },[]);
 
@@ -40,6 +41,7 @@ const AppRouter = () => {
                             <Route path="/employees" component={EmployeesPage} />
                             <Route path="/workdays/:username" component={WorkdaysPage} />
                             <Route path="/confirm-account" component={ConfirmationPage} />
+                            <Route path="/unauthorized" component={UnauthorizedPage} />
                             <Route component={NotFoundPage} />
                         </Switch>
                     </div>

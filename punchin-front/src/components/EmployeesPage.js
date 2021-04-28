@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router';
-import { Button } from 'antd';
 
 import Employee from './Employee';
 import employeesReducer from '../reducers/employees';
@@ -42,7 +41,7 @@ const EmployeesPage = () => {
                     </div>
                 </div>
             :
-                <Redirect to="/" />
+                <Redirect to="/unauthorized" />
             }
         </div>
     );

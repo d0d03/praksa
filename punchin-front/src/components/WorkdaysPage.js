@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { DatePicker, Spin } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
@@ -15,8 +16,12 @@ const WorkdaysPage = (props) =>
     const {workdays, dispatchWorkdays} = useContext(WorkdayContext);
     const [loader, setLoader] = useState(true);
     const [filter,setFilter] = useState(moment());
+    let history = useHistory();
 
     useEffect(()=>{
+        if(props.match.params.username !== undefined && !localStorage.roles.includes("_ADMIN") ){
+            history.push("/unauthorized");
+        }
         const body = JSON.stringify({
             username: (props.match.params.username === undefined ? localStorage.username : props.match.params.username),
             filterStart: filter.startOf('month').format('YYYY-MM-DD'),

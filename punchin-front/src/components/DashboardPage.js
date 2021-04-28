@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useContext  } from 'react';
-import { Progress } from 'antd';
+import React, { useEffect, useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom'; 
+import { Progress,notification, Spin } from 'antd';
 
 import fetcher from '../actions/login';
 import PunchinClock from './PunchinClock';
@@ -9,14 +10,25 @@ const DashboardPage = () => {
 
     const [progress,setProgress] = useState();
     const {workdays} = useContext(WorkdayContext);
+    const [loader,setLoader] = useState(true);
+    let history = useHistory();
 
     useEffect(()=>{
         fetcher(`/progress/${localStorage.username}`,{method:'GET'})
         .then(response=>{
             if(response!==null){
-                setProgress(parseInt(response * 100));
+                if(response.message === "You need to be logged in to see this"){
+                    notification['info']({
+                        message:"You need to be logged in to see this."
+                    })
+                    setLoader(false);
+                    history.push("/login");
+                }else{
+                    setProgress(parseInt(response * 100));
+                }
             }
         })
+        
     },[workdays]);
 
     return(
@@ -35,7 +47,7 @@ const DashboardPage = () => {
                 </div>
             </div>
             :
-            <p>You are Anonymouse, plese reveal yourself by logging in</p>
+            <Spin spinning={loader} size={'large'}/>
         }
         </div>
     );

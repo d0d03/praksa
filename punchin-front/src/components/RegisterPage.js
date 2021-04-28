@@ -7,6 +7,7 @@ import RegistrationSucess from './RegistrationSucess';
 
 const RegisterPage = () => {
 
+    const [loading,setLoading] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
@@ -28,6 +29,7 @@ const RegisterPage = () => {
 
     const registerUser = (e) => {
         e.preventDefault();
+        setLoading(true);
         if(matchPasswords()){
             const body = JSON.stringify({
                 firstName,
@@ -43,6 +45,7 @@ const RegisterPage = () => {
             .then((response) => {
                 if(response!==null){
                     setSuccess(true);
+                    setLoading(false);
                 }
             })
         }
@@ -66,7 +69,7 @@ const RegisterPage = () => {
                     <Input type="password" placeholder="Repeat password" required value={matchingPassword} onChange={(e) => setMatchingPassword(e.target.value)}/>
                     <Input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)} />
                     <Input type="number" placeholder="Workd duration" required value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
-                    <Button type="primary" htmlType="submit">Register</Button>
+                    <Button loading={loading} type="primary" htmlType="submit">Register</Button>
                 </form>
             </div>
         </div>
