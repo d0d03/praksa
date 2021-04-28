@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import { Space, Modal, Button, DatePicker, TimePicker } from 'antd';
+import React, {useContext, useState} from 'react';
+import { Space, Modal, Button, DatePicker, TimePicker, Collapse, notification } from 'antd';
 import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
@@ -8,6 +8,8 @@ import fetcher from '../actions/login';
 const Workday = ({ workday }) => {
 
     const [loading,setLoading] = useState(false);
+    const [loadingE,setLoadingE] = useState(false);
+    const [loadingR,setLoadingR] = useState(false);
     const { dispatchWorkdays } = useContext(WorkdayContext);
     const [visible,setVisible] = useState(false);
     const [date,setDate] = useState(moment(workday.date));
@@ -16,6 +18,7 @@ const Workday = ({ workday }) => {
     const [hours,setHours] = useState(undefined);
     const [note, setNote] = useState(workday.note.trim());
     const {RangePicker} = TimePicker;
+    const {Panel} = Collapse;
 
     function onDateChange(date){
         setDate(date);
@@ -32,15 +35,19 @@ const Workday = ({ workday }) => {
         }
     }
     
+    
     const removeWorkday = (id) => {
-        setLoading(true);
+        setLoadingR(true);
         fetcher('/workday/'+ id,{method:'DELETE'})
         .then(response=>{
-            alert(response.message);
             dispatchWorkdays({type:'REMOVE_WORKDAY', id});
-            setLoading(false);
+            setLoadingR(false);
             }
         );
+        notification['warn']({
+            message:'Workday deleted',
+            description:'Workday you selected whas successfuly deleted. This can not be undone'
+        });
     }
 
     const showModal = () => {
@@ -53,7 +60,7 @@ const Workday = ({ workday }) => {
     }
 
     const editWorkday = () => {
-        setLoading(true);
+        setLoadingE(true);
         const body = JSON.stringify({
             date: moment(date).format("YYYY-MM-DD"),
             start: moment(start).format("HH:mm"),
@@ -63,36 +70,55 @@ const Workday = ({ workday }) => {
         });
         fetcher(`/workday/${workday.id}`,{method:'PUT', body})
         .then(response => {
-            console.log(response);
             dispatchWorkdays({type:'EDIT_WORKDAY',id:workday.id, updates: response});
             setVisible(false);
-            setLoading(false);
+            setLoadingE(false);
         })
+        notification['success']({
+            message:'Workday updated',
+            description:'Changes have been saved'
+        });
+        
     }
+
+    const btnExtra = () => (
+        <Space>
+            <Button onClick={showModal} loading={loadingE}>Edit</Button>
+            <Button danger loading={loadingR} onClick={()=> removeWorkday(workday.id)}>x</Button>
+        </Space>
+    );
+   
 
     return (
         <div>
-            <Space>
-                <h3>{workday.date}</h3>
-                <p>Start {moment(workday.start,"HH:mm:ss").format("HH:mm")} - End {workday.end}</p>
-                <p> | Hours worked {workday.hours} </p>
+                <Collapse accordion ghost>
+                    <Panel header={<span>{workday.date}</span>} extra={btnExtra()} key={workday.id}>
+                        <p>
+                        Start <span>{moment(workday.start,"HH:mm:ss").format("HH:mm")}</span>
+                        - End <span>{moment(workday.end,"HH:mm:ss").format("HH:mm")}</span> 
+                        | Hours worked <span>{moment(workday.hours,"HH:mm:ss").format("HH:mm")}</span></p>
+                        <p>{workday.note}</p>
+                   
+                    </Panel>
+                </Collapse>
+                
                 <Modal 
                     visible={visible}
                     okText="SAVE"
                     onOk={editWorkday}
                     onCancel={()=>{setVisible(false)}}
                     confirmLoading={loading}
-                >   
-                    <Space direction="vertical" size={12}>
-                        <DatePicker value={date} onChange={onDateChange} />
-                        <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
-                        <textarea value={note} onChange={(e) => setNote(e.target.value)}/>
+                > 
+                <div  className="myForm">
+                    <Space direction="vertical">
+                        <Space>
+                            <DatePicker value={date} onChange={onDateChange} />
+                            <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
+                        </Space>
+                        <textarea className="noteInput" value={note} onChange={(e) => setNote(e.target.value)}/>
                     </Space>
+                    </div>
                 </Modal>
-                <Button onClick={showModal}>Edit</Button>
-                <Button danger loading={loading} onClick={()=> removeWorkday(workday.id)}>x</Button>
-            </Space>
-            <p>{workday.note}</p>   
         </div>
     );
 }

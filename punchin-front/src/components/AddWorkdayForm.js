@@ -79,7 +79,7 @@ const AddWorkdayForm = () => {
                         <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
                     </Space>
                     <textarea className="noteInput" value={note} onChange={(e) => setNote(e.target.value)}/>
-                    <Button disabled={disabled} htmlType="submit" type="primary">Add workday</Button> 
+                    <Button className="addBtn" disabled={disabled} htmlType="submit" type="primary">Add workday</Button> 
                 </Space>
                 </form>
             </div>
