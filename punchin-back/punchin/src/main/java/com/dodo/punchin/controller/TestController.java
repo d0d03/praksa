@@ -134,7 +134,7 @@ public class TestController {
 			employee.setEnabled(true);
 			return ResponseEntity.ok(new AuthenticationResponse("Account verified sucessfully"));
 		}
-		return new ResponseEntity<>(new AuthenticationResponse("INVALID OR BROKEN LINK"), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new AuthenticationResponse("INVALID OR BROKEN LINK"), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/authenticate", method=RequestMethod.POST)
@@ -191,7 +191,7 @@ public class TestController {
 		try {
 			confirmationTokenRepository.deleteByEmployeeId(id);
 			employeeRepository.deleteById(id);
-			return ResponseEntity.ok("Employee deleted");
+			return ResponseEntity.ok(new AuthenticationResponse("Employee deleted"));
 		}catch(Exception e) {
 			throw e;
 		}

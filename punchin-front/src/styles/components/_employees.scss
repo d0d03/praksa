@@ -1,0 +1,34 @@
+.employee-container{
+    margin: 0 auto;
+    padding: 0 $m-size;
+    max-width: 80rem;
+    max-height: 80vh;
+    box-shadow: 0px 0px 5px -2px rgba(0,0,0,1);
+    overflow: auto;
+}
+
+.employee-list{
+    align-items: center;
+    padding: $l-size;
+    height: 65vh;
+    justify-content: space-between;
+    overflow: auto;
+    span{
+        font-weight: bold;
+    }
+}
+
+.individual-employee{
+    margin: $l-size;
+    padding: $s-size;
+    border-radius: 1rem;
+    border: 1px solid $dark-blue;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.employee-info{
+    Button{
+    //    margin-left:5rem;
+    
+    }
+}

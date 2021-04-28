@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Result, Button } from 'antd';
 
-const NotFoundPage = () => (
-    <div>
-        404 - <Link to="/">Go home</Link>
+const NotFoundPage = () => {
+
+    const [home,setHome] = useState('/login');
+    useEffect(()=>{
+        if(localStorage.username){
+            setHome('/');
+        }
+    },[])
+
+    return(
+        <div>
+    <Result
+        status="404" 
+        title="404" 
+        subtitle="Sorry, the page you visited does not exist."
+        extra={<Link to={home}><Button type="primary">Back Home</Button></Link>}
+    />
     </div>
-);
+
+    );
+    // <div>
+    //     404 - <Link to="/">Go home</Link>
+    // </div>
+}
 
 export { NotFoundPage as default }

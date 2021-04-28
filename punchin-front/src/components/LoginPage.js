@@ -1,5 +1,6 @@
 import React, { useState,useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Input, Button, notification, message } from 'antd';
 
 import UserContext from '../context/user-context';
 import fetcher from '../actions/login';
@@ -8,24 +9,30 @@ const LoginPage = () => {
     const {dispatchUser} = useContext(UserContext);
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
-    const [sucess,setSucess] = useState(true);
     let history = useHistory();
 
     const loginUser = (e) => {
         e.preventDefault();
         if(username.length === 0 || !username.trim()){
-            alert("unesite username");
+            message.config({top: 315});
+            message.warning("Please enter your username");
         }else if(password.length === 0 || !password.trim()){
-            alert("unesite lozinku");
+            message.config({top: 425});
+            message.warning("Please enter your password")
         }else{
             const data = {username,password}
             fetcher('/authenticate',{method:'POST',body:JSON.stringify(data)})
             .then(response => {
                 if(response !== null){
                     if(response.message!==null){
-                        setSucess(false);
+                        notification['info']({
+                            message:"Account not validated",
+                            description: response.message
+                        })
                     }else{
                         dispatchUser({type:'LOGIN',username,token:response.token,roles:response.roles});
+                        message.config({top:100});
+                        message.success(`Wellcome ${username}`);
                         history.push('/');
                     }
                 }
@@ -36,17 +43,16 @@ const LoginPage = () => {
     } 
 
     return(
-        <div>
+        <div className="content-container">
             {!(localStorage.token) && 
+            <div className="loginForm">
                 <form onSubmit={loginUser}>
-                    <input type="text" value={username} placeholder="username" onChange={(e) => setUsername(e.target.value)} required/>
-                    <input type="password" value={password} placeholder="password" onChange={(e) => setPassword(e.target.value)} required/>
-                    <button>Sign in</button>
+                    <Input name="username" id="username" type="text" value={username} placeholder="username" onChange={(e) => setUsername(e.target.value)}  />
+                    <Input type="password" value={password} placeholder="password" onChange={(e) => setPassword(e.target.value)}  />
+                    <Button type="primary" htmlType="submit">Sign in</Button>
                 </form>
-            }
-            {!sucess && 
-                <p>Plesae confirm your email to proceed</p>
-            }
+            </div>
+            }   
         </div>
     );
 }

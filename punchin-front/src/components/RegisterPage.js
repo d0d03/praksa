@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Input, Button } from 'antd';
+
 
 import fetcher from '../actions/login';
 import RegistrationSucess from './RegistrationSucess';
@@ -54,17 +56,19 @@ const RegisterPage = () => {
     )}
     return(
 
-        <div>
-            <form onSubmit={registerUser}>
-                <input type="text" placeholder="First name" required value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
-                <input type="text" placeholder="Last name" required value={lastName} onChange={(e) => setLastName(e.target.value)}/>
-                <input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
-                <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
-                <input type="password" placeholder="Repeat password" required value={matchingPassword} onChange={(e) => setMatchingPassword(e.target.value)}/>
-                <input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="number" placeholder="Workd duration" required value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
-                <button>Register</button>
+        <div className="content-container">
+            <div className="registerForm">
+                <form onSubmit={registerUser}>
+                    <Input type="text" placeholder="First name" required value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
+                    <Input type="text" placeholder="Last name" required value={lastName} onChange={(e) => setLastName(e.target.value)}/>
+                    <Input type="text" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    <Input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <Input type="password" placeholder="Repeat password" required value={matchingPassword} onChange={(e) => setMatchingPassword(e.target.value)}/>
+                    <Input type="email" placeholder="e-Mail" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Input type="number" placeholder="Workd duration" required value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
+                    <Button type="primary" htmlType="submit">Register</Button>
                 </form>
+            </div>
         </div>
     );
 

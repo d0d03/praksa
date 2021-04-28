@@ -1,10 +1,14 @@
 import React from 'react';
+import { Result } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 
 const RegistrationSucess = () => (
-    <div>
-        <h1>Just one more step!</h1>
-        <p>Please check your email to complete the registration proccess.</p>
-    </div>
+
+    <Result 
+        icon={<SmileOutlined />}
+        title="Just one more step!"
+        subTitle="Please check your email to complete the registration proccess."
+    />
 );
 
 export { RegistrationSucess as default }

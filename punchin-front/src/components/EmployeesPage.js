@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router';
+import { Button } from 'antd';
 
 import Employee from './Employee';
 import employeesReducer from '../reducers/employees';
@@ -28,13 +29,17 @@ const EmployeesPage = () => {
     return(
         <div>
             {localStorage.roles.includes("_ADMIN") ? 
-                <div>
-                    <h1>Employees</h1>
-                    {employees.map((employee)=>(
-                        <div key={employee.id}>
-                            <Employee employee={employee} dispatch={dispatchEmployees}/>
-                        </div>
-                    ))}
+                <div className="employee-container">
+                    <div className="container-header">
+                        <h1>Employees</h1>
+                    </div>
+                    <div className="employee-list">
+                        {employees.map((employee)=>(
+                            <div className="individual-employee" key={employee.id}>
+                                <Employee employee={employee} dispatch={dispatchEmployees}/>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             :
                 <Redirect to="/" />

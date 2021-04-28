@@ -1,0 +1,9 @@
+.loginForm{
+    display: flex;
+    justify-content: space-around;
+    padding: $l-size;
+    Input{
+        margin:$l-size 0;
+        padding: $s-size;
+    }
+}
