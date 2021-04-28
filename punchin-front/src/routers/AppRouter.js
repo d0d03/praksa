@@ -13,6 +13,7 @@ import userReducer from '../reducers/users';
 import WorkdayContext from '../context/workdays-context';
 import workdaysReducer from '../reducers/workdays';
 import EmployeesPage from '../components/EmployeesPage';
+import HomePage from '../components/HomePage';
 
 const AppRouter = () => {
     const [user,dispatchUser] = useReducer(userReducer,{}); 
@@ -31,7 +32,8 @@ const AppRouter = () => {
                     <div>
                         <Header />
                         <Switch>
-                            <Route path="/" component={DashboardPage} exact={true} />
+                            <Route path="/" component={HomePage} exact={true} />
+                            <Route path="/dash" component={DashboardPage} />
                             <Route path="/workdays" component={WorkdaysPage} exact={true}/>
                             <Route path="/login" component={LoginPage} />
                             <Route path="/register" component={RegisterPage} />

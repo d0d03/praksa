@@ -33,7 +33,7 @@ const LoginPage = () => {
                         dispatchUser({type:'LOGIN',username,token:response.token,roles:response.roles});
                         message.config({top:100});
                         message.success(`Wellcome ${username}`);
-                        history.push('/');
+                        history.push('/dash');
                     }
                 }
             })

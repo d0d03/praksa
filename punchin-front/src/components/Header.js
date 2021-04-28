@@ -1,4 +1,4 @@
-import React,{ useContext } from 'react';
+import React,{ useContext, useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { Button, Space } from 'antd';
@@ -8,14 +8,22 @@ import UserContext from '../context/user-context';
 const Header = () => {
 
     const {user,dispatchUser} = useContext(UserContext);
-  
+    const [home,setHome] = useState('/');
     let history = useHistory();
+    
+    useEffect(() =>{
+        if(user.token){
+            setHome('/dash');
+        }else{
+            setHome('/');
+        }
+    });
 
     return(
         <header>
             <div className="header-container">
                 <div className="header__content">
-                    <Link className="header__title" to="/" exact="true">
+                    <Link className="header__title" to={home} exact="true"> {/*dash*/}
                         <h1>Punchin</h1>
                     </Link>
                     {user.token ?

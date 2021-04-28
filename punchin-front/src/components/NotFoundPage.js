@@ -7,7 +7,7 @@ const NotFoundPage = () => {
     const [home,setHome] = useState('/login');
     useEffect(()=>{
         if(localStorage.username){
-            setHome('/');
+            setHome('/dash'); 
         }
     },[])
 
@@ -22,9 +22,6 @@ const NotFoundPage = () => {
     </div>
 
     );
-    // <div>
-    //     404 - <Link to="/">Go home</Link>
-    // </div>
 }
 
 export { NotFoundPage as default }

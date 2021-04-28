@@ -55,9 +55,6 @@ const Employee = ({employee, dispatch}) => {
                 <Col span={6}><Progress size="small" percent={progress}/></Col>
                 <Col style={{textAlign:"right"}} span={12}><Link to={`/workdays/${employee.username}`}><Button>Workdays</Button></Link><Button danger onClick={showDeleteConfirm}>Remove</Button></Col>
             </Row>
-            {/* <p>{employee.firstName} {employee.lastName}</p>
-            <Progress size="small" percent={progress} />
-            <Link to={`/workdays/${employee.username}`}><Button>Workdays</Button></Link> */}
         </div>
 
     );
