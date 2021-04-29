@@ -50,14 +50,14 @@ const Workday = ({ workday }) => {
         setLoadingR(true);
         fetcher('/workday/'+ id,{method:'DELETE'})
         .then(response=>{
+            notification['success']({
+                message:response.message,
+                description:'Workday you selected whas successfuly deleted.'
+            });
             dispatchWorkdays({type:'REMOVE_WORKDAY', id});
             setLoadingR(false);
             }
         );
-        notification['success']({
-            message:'Workday deleted',
-            description:'Workday you selected whas successfuly deleted.'
-        });
     }
 
     const showModal = () => {
@@ -107,8 +107,6 @@ const Workday = ({ workday }) => {
           },
         });
       }
-
-    //   ()=> removeWorkday(workday.id)
 
     const btnExtra = () => (
         <Space>

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,7 +58,7 @@ public class AuthenticationContorller {
 	public ResponseEntity<?> saveUser(@Valid @RequestBody EmployeeDTO employee) throws Exception{
 		
 		try {
-			//role it DTO i castaj u Role
+			//role iz DTO i castaj u Role
 			Set<String> strRoles = employee.getRoles();
 			Set<Role> roles = new HashSet<>();
 			
@@ -99,7 +100,7 @@ public class AuthenticationContorller {
 			throw new Exception(e.getMessage());
 		}
 		catch (Exception e) {
-			return new ResponseEntity<>("USERNAME ALREADY IN USE " ,HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new AuthenticationResponse("Username already in use") ,HttpStatus.OK);
 		}
 	}
 	
@@ -119,15 +120,25 @@ public class AuthenticationContorller {
 	
 	@RequestMapping(value = "/authenticate", method=RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-		if(userDetails.isEnabled()) {
-			final String token = jwtTokenUtil.generateToken(userDetails);
-			Set<String> roles = new HashSet<>();
-			userDetails.getAuthorities().forEach(role->{
-				roles.add(role.toString());
-			});
-			return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername(),roles)); 
+		try {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();  
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+			 
+			if(userDetails.isEnabled()){
+				if(encoder.matches(authenticationRequest.getPassword(), userDetails.getPassword())) {
+					final String token = jwtTokenUtil.generateToken(userDetails);
+					Set<String> roles = new HashSet<>();
+					userDetails.getAuthorities().forEach(role->{
+						roles.add(role.toString());
+					});
+					return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getUsername(),roles)); 
+				}
+				return ResponseEntity.ok(new AuthenticationResponse("Wrong password"));
+			}
+			return ResponseEntity.ok(new AuthenticationResponse("Please confirm your email to complete the registration!"));
+		}catch(Exception e) {
+			return ResponseEntity.ok(new AuthenticationResponse("User doesn't exist"));
 		}
-		return ResponseEntity.ok(new AuthenticationResponse("Please confirm your email to complete the registration!"));
+		
 	}
 }

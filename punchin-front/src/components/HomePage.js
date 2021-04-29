@@ -1,6 +1,6 @@
 import React from 'react';
-import { Carousel, Image } from 'antd';
-import SpringLogo from '../images/spring';
+import { Carousel } from 'antd';
+import {SpringLogo, ReactLogo, AntdLogo} from '../images/spring';
 
 const HomePage = () => {
 
@@ -28,13 +28,10 @@ const HomePage = () => {
                 <h3 style={contentStyle}>App was made in following technologies</h3>
                 </div>
                 <div>
-                    <h3 style={contentStyle}><Image width={200} src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"/></h3>
+                    <h3 style={contentStyle}><ReactLogo /></h3>
                 </div>
                 <div>
-                    <h3 style={contentStyle}> <Image
-                    width={200}
-                    src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                  /></h3>
+                    <h3 style={contentStyle}> <AntdLogo /></h3>
                 </div>
                 <div>
                     <h3 style={contentStyle}><SpringLogo /></h3>

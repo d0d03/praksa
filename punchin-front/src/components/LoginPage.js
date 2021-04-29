@@ -26,8 +26,7 @@ const LoginPage = () => {
                 if(response !== null){
                     if(response.message!==null){
                         notification['info']({
-                            message:"Account not validated",
-                            description: response.message
+                            message:response.message
                         })
                     }else{
                         dispatchUser({type:'LOGIN',username,token:response.token,roles:response.roles});

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import useTimer from 'easytimer-react-hook';
-import { Progress, notification } from 'antd';
+import { Progress, notification, Modal } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 import fetcher from '../actions/login';
@@ -15,32 +16,22 @@ const PunchinClock = () => {
     const [date,setDate] = useState();
     const [start,setStart] = useState();
     const [display,setDsiplay] = useState('Punch in');
+    const {confirm} = Modal;
 
     timer.addEventListener("secondsUpdated",()=>{
         setTime(parseFloat((timer.getTimeValues().toString()).replace(":",".")));
         setDsiplay(`${timer.getTimeValues().toString()}`);
-        //localStorage.setItem("runningTime",JSON.stringify(timer.getTimeValues()));
     });
 
-    const handleTime = (e) => {
-        e.preventDefault();
-        setToggle(true);
-        //localStorage.setItem('running',JSON.stringify(true));
-        if(toggle){
-            setDate(moment().format("YYYY-MM-DD"));
-            setStart(moment().format("HH:mm"));
-            timer.start();
-            setToggle(false);
-        }else{
-            const end = (moment().format("HH:mm"));
-            const hours = (timer.getTimeValues().toString().substring(0,5));
-            const body = JSON.stringify({
-                date,
-                start,
-                end,
-                hours,
-                note: ''
-            });
+    function showDeleteConfirm(body) {
+        confirm({
+          title: 'Are you sure you want to end your workday?',
+          icon: <InfoCircleOutlined />,
+          content: 'Your workday will be saved, and you can edit it later',
+          okText: 'Yes',
+          okType: 'primary',
+          cancelText: 'No',
+          onOk() {
             fetcher('/workday',{method: 'POST', body})
             .then(response => {
                 dispatchWorkdays({
@@ -57,10 +48,37 @@ const PunchinClock = () => {
             });
             setDsiplay('Punch in');
             timer.stop(); 
-            //localStorage.setItem('running',JSON.stringify(false));
             notification['success']({
                 message:"Workday saved"
             })
+          },
+          onCancel() {
+            timer.start();
+            setToggle(false);
+          },
+        });
+      }
+
+    const handleTime = (e) => {
+        e.preventDefault();
+        setToggle(true);
+        if(toggle){
+            setDate(moment().format("YYYY-MM-DD"));
+            setStart(moment().format("HH:mm"));
+            timer.start({startValues:[0,55,59,7,0]});
+            setToggle(false);
+        }else{
+            const end = (moment().format("HH:mm"));
+            const hours = (timer.getTimeValues().toString().substring(0,5));
+            const body = JSON.stringify({
+                date,
+                start,
+                end,
+                hours,
+                note: ''
+            });
+            showDeleteConfirm(body);
+            timer.pause();
         }
     }
 

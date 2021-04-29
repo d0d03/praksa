@@ -17,7 +17,7 @@ const Header = () => {
         }else{
             setHome('/');
         }
-    });
+    },[user]);
 
     return(
         <header>
