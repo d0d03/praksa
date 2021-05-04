@@ -18,6 +18,9 @@ function updateOptions(options){
 export default async function fetcher(url,options){
     const response = await fetch(backRoute.concat(url),updateOptions(options));
     if(response.status === 200){
+      if(response.headers.get('Content-Type') === 'application/vnd.ms-excel'){
+        return response;
+      }
         return response.json();
     }else if(response.status === 403){
         localStorage.clear();

@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { DatePicker, Spin } from 'antd';
+import { DatePicker, Spin, Button } from 'antd';
 import moment from 'moment';
 import 'antd/dist/antd.css';
+import { DownloadOutlined } from '@ant-design/icons';
+
 
 import fetcher from '../actions/login';
 import WorkdayList from './WorkdayList';
@@ -15,6 +17,7 @@ const WorkdaysPage = (props) =>
     const {user} = useContext(UserContext);
     const {workdays, dispatchWorkdays} = useContext(WorkdayContext);
     const [loader, setLoader] = useState(true);
+    const [btnLoader, setBtnLoader] = useState(false);
     const [filter,setFilter] = useState(moment());
     let history = useHistory();
 
@@ -34,7 +37,30 @@ const WorkdaysPage = (props) =>
             }
             setLoader(false);
         });
-    },[user,filter,props]);
+    },[user,filter,props.match.params.username]);
+
+    const handleExport = () => {
+        setBtnLoader(true);
+        const body = JSON.stringify({
+            username: (props.match.params.username === undefined ? localStorage.username : props.match.params.username),
+            filterStart: filter.startOf('month').format('YYYY-MM-DD'),
+            filterEnd:  filter.endOf('month').format('YYYY-MM-DD')
+        })
+        fetcher('/workdays/export/excel',{method:'POST',body})
+        .then(response => {
+            if(response !== null){
+                response.blob().then(blob =>{
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href=url;
+                    a.download = props.match.params.username + ' Workdays_' + filter.format('YYYY-MM').toString();
+                    a.click();
+                })
+            }
+            setBtnLoader(false);
+        })
+        
+    }
 
     const onFilterChange = (date) => {
         if(date !== null){
@@ -57,7 +83,10 @@ const WorkdaysPage = (props) =>
                 <div className="container-body">
                     <WorkdayList />
                 </div>
-                {props.match.params.username===undefined && <AddWorkdayForm />}
+                {props.match.params.username===undefined ? 
+                    <AddWorkdayForm />
+                : 
+                    <Button className="exportBtn" loading={btnLoader} type="primary" shape="round" size="large" onClick={handleExport} icon={<DownloadOutlined />} >Export</Button>}
             </div>
         </WorkdayContext.Provider>
     );
