@@ -8,6 +8,19 @@ import fetcher from '../actions/login';
 import TextArea from 'antd/lib/input/TextArea';
 
 const Workday = ({ workday }) => {
+    return (
+        <div>
+            <p>
+            Start <span>{moment(workday.start,"HH:mm:ss").format("HH:mm")}</span>
+            - End <span>{moment(workday.end,"HH:mm:ss").format("HH:mm")}</span> 
+            | Hours worked <span>{moment(workday.hours,"HH:mm:ss").format("HH:mm")}</span>
+            </p>
+            <p>{workday.note}</p>
+        </div>
+    );
+}
+
+const BtnExtra = ({workday}) => {
 
     const [disabled,setDisabled] = useState(true);
     const [loadingE,setLoadingE] = useState(false);
@@ -21,7 +34,6 @@ const Workday = ({ workday }) => {
     const [note, setNote] = useState(workday.note.trim());
     const [confirmed, setConfirmed] = useState(workday.isConfirmed);
     const {RangePicker} = TimePicker;
-    const {Panel} = Collapse;
     const {confirm} = Modal;
 
     useEffect(()=>{
@@ -46,7 +58,6 @@ const Workday = ({ workday }) => {
             setEnd(null);
         }
     }
-    
     
     const removeWorkday = (id) => {
         setLoadingR(true);
@@ -127,7 +138,7 @@ const Workday = ({ workday }) => {
             }
       }
 
-    const btnExtra = () => (
+    return( 
         <Space>
             {confirmed ? 
                 <div>
@@ -140,44 +151,27 @@ const Workday = ({ workday }) => {
                 }
             <Button onClick={showModal} loading={loadingE}>Edit</Button>
             <Button danger loading={loadingR} onClick={showDeleteConfirm}>x</Button>
-        </Space>
-    );
-   
-    return (
-        <div>
-                <Collapse accordion ghost>
-                    <Panel header={<span>{workday.date}</span>} extra={btnExtra()} key={workday.id}>
-                        <p>
-                        Start <span>{moment(workday.start,"HH:mm:ss").format("HH:mm")}</span>
-                        - End <span>{moment(workday.end,"HH:mm:ss").format("HH:mm")}</span> 
-                        | Hours worked <span>{moment(workday.hours,"HH:mm:ss").format("HH:mm")}</span>
-                        </p>
-                        <p>{workday.note}</p>
-                        
-                   
-                    </Panel>
-                </Collapse>
-                
-                <Modal 
+
+            <Modal 
                     visible={visible}
                     okText="SAVE"
                     onOk={editWorkday}
                     onCancel={()=>{setVisible(false)}}
                     confirmLoading={loadingE}
                     okButtonProps= {{ disabled: disabled}}
-                > 
-                <div  className="myForm">
-                    <Space direction="vertical">
-                        <Space>
-                            <DatePicker value={date} onChange={onDateChange} />
-                            <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
+                >
+                    <div  className="myForm">
+                        <Space direction="vertical">
+                            <Space>
+                                <DatePicker value={date} onChange={onDateChange} />
+                                <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
+                            </Space>
+                            <TextArea className="noteInput" value={note} onChange={(e)=> setNote(e.target.value)} showCount maxLength={250}  autoSize={{ minRows: 3, maxRows: 6 }}/>
                         </Space>
-                        <TextArea className="noteInput" value={note} onChange={(e)=> setNote(e.target.value)} showCount maxLength={250}  autoSize={{ minRows: 3, maxRows: 6 }}/>
-                    </Space>
                     </div>
                 </Modal>
-        </div>
+        </Space>
     );
-}
+};
 
-export { Workday as default }
+export { BtnExtra ,Workday as default }
