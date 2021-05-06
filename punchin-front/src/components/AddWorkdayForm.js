@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
 import fetcher from '../actions/login';
+import TextArea from 'antd/lib/input/TextArea';
 
 const AddWorkdayForm = () => {
 
@@ -82,7 +83,7 @@ const AddWorkdayForm = () => {
                         <DatePicker value={date} onChange={onDateChange} />
                         <RangePicker value = {[start,end]} onChange={onTimeChange} format={"HH:mm"} />
                     </Space>
-                    <textarea className="noteInput" value={note} onChange={(e) => setNote(e.target.value)}/>
+                    <TextArea className="noteInput" value={note} onChange={(e) => setNote(e.target.value)} showCount maxLength={250}  autoSize={{ minRows: 3, maxRows: 6 }}/>
                     <Button className="addBtn" disabled={disabled} htmlType="submit" type="primary">Add workday</Button> 
                 </Space>
                 </form>

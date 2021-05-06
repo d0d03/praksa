@@ -31,13 +31,12 @@
     align-items: center;
     display:flex;
     justify-content: space-evenly;
-    padding: $xl-size;
+    margin-top: $l-size;
+    padding: $s-size $l-size;
 }
 
 .noteInput{
     width: 100%;
-    height: 10rem;
-    border: 1px solid $dark-blue;
 }
 
 .addBtn{
