@@ -10,6 +10,15 @@ public class WorkdayDTO {
 	private String hours;
 	private Employee employee;
 	private String note;
+	private Boolean isConfirmed;
+	
+	public Boolean getIsConfirmed() {
+		return isConfirmed;
+	}
+	
+	public void setIsConfirmed(Boolean isConfirmed) {
+		this.isConfirmed = isConfirmed;
+	}
 	
 	public String getDate() {
 		return date;

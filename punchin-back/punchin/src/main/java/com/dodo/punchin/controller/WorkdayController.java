@@ -1,12 +1,16 @@
 package com.dodo.punchin.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 
 import com.dodo.punchin.entities.Employee;
 import com.dodo.punchin.entities.Workday;
@@ -94,6 +102,7 @@ public class WorkdayController {
 			_workday.setEnd(LocalTime.parse(workday.getEnd()));
 			_workday.setHours(LocalTime.parse(workday.getHours()));
 			_workday.setNote(workday.getNote());
+			_workday.setIsConfirmed(false);
 			
 			return new ResponseEntity<>(workdayRepository.save(_workday),HttpStatus.OK); 
 		}else {
@@ -109,5 +118,32 @@ public class WorkdayController {
 		}catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@RequestMapping(value="/workdays/export/excel",method=RequestMethod.POST)
+	public ResponseEntity<Resource> getFile(@RequestBody WorkdayRequest wReq ,HttpServletResponse response) throws IOException{
+		String filename = "workdays.xlsx";
+		Employee employeeData = employeeRepository.findByUsername(wReq.getUsername());
+		
+		InputStreamResource file = new InputStreamResource(workdayService.load(employeeData, wReq.getFilterStart(), wReq.getFilterEnd()));
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename)
+				.contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+				.body(file);
+	}
+	
+	@RequestMapping(value="/workday/confirm/{id}", method=RequestMethod.GET)
+	public ResponseEntity<?> confirmWorkday(@PathVariable("id") long id){
+		Optional<Workday> workdayData = workdayRepository.findById(id);
+		if(workdayData.isPresent()) {
+			Workday _workday = workdayData.get();
+			_workday.setIsConfirmed(true);
+			
+			workdayRepository.save(_workday);
+			
+			return new ResponseEntity<>(new AuthenticationResponse("confirmed"),HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 }

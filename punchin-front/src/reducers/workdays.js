@@ -12,7 +12,8 @@ const workdaysReducer = (state, action) => {
                     start : action.start,
                     end : action.end,
                     hours : action.hours, 
-                    note: action.note
+                    note: action.note,
+                    isConfirmed: action.isConfirmed
                 }
             ];
         case 'REMOVE_WORKDAY':

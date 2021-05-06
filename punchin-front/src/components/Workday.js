@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { Space, Modal, Button, DatePicker, TimePicker, Collapse, notification } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Space, Modal, Button, DatePicker, TimePicker,Tooltip, Collapse, notification } from 'antd';
+import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 import WorkdayContext from '../context/workdays-context';
@@ -18,6 +18,7 @@ const Workday = ({ workday }) => {
     const [end,setEnd] = useState(moment(workday.end,"HH:mm"));
     const [hours,setHours] = useState(undefined);
     const [note, setNote] = useState(workday.note.trim());
+    const [confirmed, setConfirmed] = useState(workday.isConfirmed);
     const {RangePicker} = TimePicker;
     const {Panel} = Collapse;
     const {confirm} = Modal;
@@ -82,6 +83,7 @@ const Workday = ({ workday }) => {
         .then(response => {
             dispatchWorkdays({type:'EDIT_WORKDAY',id:workday.id, updates: response});
             setVisible(false);
+            setConfirmed(response.isConfirmed)
             setLoadingE(false);
         })
         notification['success']({
@@ -108,8 +110,33 @@ const Workday = ({ workday }) => {
         });
       }
 
+      const handleNotConfirm = () => {
+            if((localStorage.roles).includes("ROLE_ADMIN")){
+                fetcher(`/workday/confirm/${workday.id}`, {method:'GET'})
+                .then(response=>{
+                    if(response!==null && response.message!==null){
+                        setConfirmed(true);
+                        notification['success']({
+                            message:"Workday confirmed!"
+                        })
+                    }
+                })
+            }else{
+                console.log("no")
+            }
+      }
+
     const btnExtra = () => (
         <Space>
+            {confirmed ? 
+                <div>
+                    <Tooltip title="confirmed by admin"><CheckCircleOutlined style={{color:"green"}}/> </Tooltip>  
+                </div>
+            : 
+                <div>
+                    <Tooltip title="Admin needs to confirm this"><ExclamationCircleOutlined onClick={handleNotConfirm} style={{color:"red"}}/></Tooltip>
+                </div>
+                }
             <Button onClick={showModal} loading={loadingE}>Edit</Button>
             <Button danger loading={loadingR} onClick={showDeleteConfirm}>x</Button>
         </Space>
@@ -122,8 +149,10 @@ const Workday = ({ workday }) => {
                         <p>
                         Start <span>{moment(workday.start,"HH:mm:ss").format("HH:mm")}</span>
                         - End <span>{moment(workday.end,"HH:mm:ss").format("HH:mm")}</span> 
-                        | Hours worked <span>{moment(workday.hours,"HH:mm:ss").format("HH:mm")}</span></p>
+                        | Hours worked <span>{moment(workday.hours,"HH:mm:ss").format("HH:mm")}</span>
+                        </p>
                         <p>{workday.note}</p>
+                        
                    
                     </Panel>
                 </Collapse>

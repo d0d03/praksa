@@ -1,5 +1,6 @@
 package com.dodo.punchin.services;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import com.dodo.punchin.config.ExcelHelper;
 import com.dodo.punchin.entities.Employee;
 import com.dodo.punchin.entities.Workday;
 
@@ -32,7 +34,8 @@ public class WorkdaysService {
 					LocalTime.parse(rs.getString("workday_end")),
 					LocalTime.parse(rs.getString("workday_hours")),
 					employee,
-					rs.getString("note")
+					rs.getString("note"),
+					rs.getBoolean("is_confirmed")
 					)
 		);
 		//int temp = jdbc.queryForObject("SELECT EXTRACT(month FROM date '?')",new Object[] {filter},Integer.class);
@@ -41,7 +44,7 @@ public class WorkdaysService {
 	
 	public Double getProgress(Employee employee) {
 		int maxWorkHours = jdbc.queryForObject("SELECT max_hours FROM employees e WHERE e.id = ?", new Object[] {employee.getId()},int.class);
-		String hoursWorked = jdbc.queryForObject("SELECT SUM(workday_hours) FROM workdays WHERE employee_id = ?", new Object[] {employee.getId()},String.class);
+		String hoursWorked = jdbc.queryForObject("SELECT SUM(workday_hours) FROM workdays WHERE employee_id = ? AND is_confirmed= true", new Object[] {employee.getId()},String.class);
 		if(hoursWorked != null) {
 			String _temp = hoursWorked.substring(0,5).replace(":", ".");
 			
@@ -52,5 +55,11 @@ public class WorkdaysService {
 			return progress;
 		}
 		return 0.0;
+	}
+	
+	public ByteArrayInputStream load(Employee employee, String start, String end) {
+		List<Workday> workdays = findWorkdays(employee, start, end);
+		ByteArrayInputStream in = ExcelHelper.workdaysToExcel(workdays);
+		return in;
 	}
 }

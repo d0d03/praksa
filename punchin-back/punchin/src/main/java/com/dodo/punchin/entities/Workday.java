@@ -43,6 +43,9 @@ public class Workday {
 	@Column
 	private String note;
 	
+	@Column
+	private Boolean isConfirmed;
+	
 	public Workday() {}
 
 	public Workday(LocalDate date, LocalTime start, LocalTime end, LocalTime hours, Employee employee, String note) {
@@ -52,8 +55,9 @@ public class Workday {
 		this.hours = hours;
 		this.employee = employee;
 		this.note = note;
+		this.isConfirmed = false;
 	}
-	public Workday(Long id,LocalDate date, LocalTime start, LocalTime end, LocalTime hours, Employee employee, String note) {
+	public Workday(Long id,LocalDate date, LocalTime start, LocalTime end, LocalTime hours, Employee employee, String note, Boolean isConfirmed) {
 		this.id = id;
 		this.date = date;
 		this.start = start;
@@ -61,8 +65,17 @@ public class Workday {
 		this.hours = hours;
 		this.employee = employee;
 		this.note = note;
+		this.isConfirmed=isConfirmed;
 	}
 
+	public void setIsConfirmed(Boolean isConfirmed) {
+		this.isConfirmed=isConfirmed;
+	}
+	
+	public Boolean getIsConfirmed() {
+		return isConfirmed;
+	}
+	
 	public Long getId() {
 		return id;
 	}

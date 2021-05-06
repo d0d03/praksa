@@ -86,7 +86,7 @@ const WorkdaysPage = (props) =>
                 {props.match.params.username===undefined ? 
                     <AddWorkdayForm />
                 : 
-                    <Button className="exportBtn" loading={btnLoader} type="primary" shape="round" size="large" onClick={handleExport} icon={<DownloadOutlined />} >Export</Button>}
+                    <Button className="exportBtn" type="primary" shape="round" size="large" loading={btnLoader} onClick={handleExport} icon={<DownloadOutlined />} block >Export</Button>}
             </div>
         </WorkdayContext.Provider>
     );

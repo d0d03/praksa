@@ -59,7 +59,8 @@ const AddWorkdayForm = () => {
                     start: response.start,
                     end: response.end,
                     hours: response.hours,
-                    note: response.note
+                    note: response.note,
+                    isConfirmed: response.isConfirmed
                 })
                 setDate(null);
                 setStart(null);
