@@ -17,7 +17,7 @@ const WorkdayList = () => {
             <Collapse accordion ghost>
             {
                 workdays.map((workday)=>( 
-                <Panel header={<span>{workday.date}</span>} extra={<BtnExtra workday={workday}/>} key={workday.id}>
+                <Panel header={<span>{workday.date}</span>} extra={<BtnExtra workday={workday}/>}  key={workday.id} >
                     <Workday key={workday.id} workday={workday} />  
                 </Panel>
                 ))

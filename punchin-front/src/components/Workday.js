@@ -98,9 +98,9 @@ const BtnExtra = ({workday}) => {
             setConfirmed(response.isConfirmed)
             setLoadingE(false);
         })
-        notification['success']({
+        notification['info']({
             message:'Workday updated',
-            description:'Changes have been saved'
+            description:'Changes have been saved, but Admin needs to confirm them'
         });
         
     }
