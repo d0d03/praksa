@@ -7,14 +7,15 @@ header {
 .header-container{
     margin: 0 auto;
     padding: 0 $m-size;
-    max-width: 60rem;
+   
 }
 
 .header__content{
-    align-items: center;
+    align-items: baseline;
     display: flex;
     justify-content: space-between;
     padding: $s-size 0;
+
 }
 
 .header__title{

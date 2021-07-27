@@ -15,6 +15,14 @@ const employeesReducer = (state,action) => {
             return state.filter((employee)=>(
                 employee.id !== action.id
             ));
+        case 'GET_EMPLOYEE':
+                return state.map((employee) => {
+                    if(employee.id === action.id){
+                        return {
+                            ...employee
+                        };
+                    }
+                });
         default:
             return state;
     }

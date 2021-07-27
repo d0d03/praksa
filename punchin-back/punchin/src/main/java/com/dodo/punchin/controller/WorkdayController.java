@@ -27,12 +27,14 @@ import org.springframework.http.MediaType;
 
 
 import com.dodo.punchin.entities.Employee;
+import com.dodo.punchin.entities.Notification;
 import com.dodo.punchin.entities.Workday;
 import com.dodo.punchin.model.AuthenticationResponse;
 import com.dodo.punchin.model.WorkdayDTO;
 import com.dodo.punchin.model.WorkdayRequest;
 import com.dodo.punchin.repository.EmployeeRepository;
 import com.dodo.punchin.repository.WorkdayRepository;
+import com.dodo.punchin.services.NotificationService;
 import com.dodo.punchin.services.WorkdaysService;
 
 @RestController
@@ -46,6 +48,9 @@ public class WorkdayController {
 	
 	@Autowired
 	private WorkdaysService workdayService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 	@RequestMapping(value="/workday",method=RequestMethod.POST)
 	public ResponseEntity<Workday> createWorkday(@RequestBody WorkdayDTO workday) throws Exception{
@@ -61,6 +66,8 @@ public class WorkdayController {
 			if(username!=null) {
 				Employee  _employee= employeeRepository.findByUsername(username);
 				Workday _workday = workdayRepository.save(new Workday(LocalDate.parse(workday.getDate()),LocalTime.parse(workday.getStart()),LocalTime.parse(workday.getEnd()),LocalTime.parse(workday.getHours()),_employee,workday.getNote()));
+				
+				this.notificationService.createNotification(new Notification(1,_employee.getId(),_workday.getId()));
 				return new ResponseEntity<>(_workday,HttpStatus.OK);
 			}throw new UsernameNotFoundException("User not found with username " + username);
 		} catch (Exception e) {

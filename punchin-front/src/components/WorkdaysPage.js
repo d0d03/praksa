@@ -18,7 +18,8 @@ const WorkdaysPage = (props) =>
     const {workdays, dispatchWorkdays} = useContext(WorkdayContext);
     const [loader, setLoader] = useState(true);
     const [btnLoader, setBtnLoader] = useState(false);
-    const [filter,setFilter] = useState(moment());
+    const [defaultActive,setDefaultActive] = useState(props.match.params.workdayId);
+    const [filter,setFilter] = useState(props.match.params.filter?moment(props.match.params.filter,"YYYY-MM-DD"):moment());
     let history = useHistory();
 
     useEffect(()=>{
@@ -38,6 +39,14 @@ const WorkdaysPage = (props) =>
             setLoader(false);
         });
     },[user,filter,props.match.params.username]);
+
+    useEffect(()=>{
+        if(props.match.params.filter){
+            setFilter(moment(props.match.params.filter));
+            setDefaultActive(props.match.params.workdayId);
+        }
+        
+    },[props.match.params.filter,props.match.params.workdayId]);
 
     const handleExport = () => {
         setBtnLoader(true);
@@ -81,7 +90,7 @@ const WorkdaysPage = (props) =>
                     <DatePicker picker="month" onChange={onFilterChange} value={filter} defaultValue={moment()} allowClear={false} />
                 </div>    
                 <div className="container-body">
-                    <WorkdayList />
+                    <WorkdayList defaultActive={defaultActive}/>
                 </div>
                 {props.match.params.username===undefined ? 
                     <AddWorkdayForm />

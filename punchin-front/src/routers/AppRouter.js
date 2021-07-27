@@ -15,10 +15,13 @@ import workdaysReducer from '../reducers/workdays';
 import EmployeesPage from '../components/EmployeesPage';
 import HomePage from '../components/HomePage';
 import UnauthorizedPage from '../components/UnauthorizedPage';
+import notificationReducer from '../reducers/notifications';
+import NotificationsContext from '../context/notifications-context';
 
 const AppRouter = () => {
     const [user,dispatchUser] = useReducer(userReducer,{}); 
     const [workdays, dispatchWorkdays] = useReducer(workdaysReducer,[]);
+    const [notifications, dispatchNotifications] = useReducer(notificationReducer,[]);
 
     useEffect(()=>{
         if(localStorage.token){
@@ -31,7 +34,9 @@ const AppRouter = () => {
             <WorkdayContext.Provider value={{workdays,dispatchWorkdays}}>
                 <BrowserRouter>
                     <div>
-                        <Header />
+                        <NotificationsContext.Provider value = {{notifications,dispatchNotifications}}>
+                            <Header />
+                        </NotificationsContext.Provider>
                         <Switch>
                             <Route path="/" component={HomePage} exact={true} />
                             <Route path="/dash" component={DashboardPage} />
@@ -39,7 +44,7 @@ const AppRouter = () => {
                             <Route path="/login" component={LoginPage} />
                             <Route path="/register" component={RegisterPage} />
                             <Route path="/employees" component={EmployeesPage} />
-                            <Route path="/workdays/:username" component={WorkdaysPage} />
+                            <Route path="/workdays/:username/:filter/:workdayId"  component={WorkdaysPage} />
                             <Route path="/confirm-account" component={ConfirmationPage} />
                             <Route path="/unauthorized" component={UnauthorizedPage} />
                             <Route component={NotFoundPage} />

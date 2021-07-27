@@ -61,7 +61,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable()
 		.addFilter(new JwtAutorizationFilter(authenticationManager(), userDetailsService, jwtUtil))
 		.authorizeRequests().antMatchers(HttpMethod.DELETE,"/employees/{id}").hasRole("ADMIN")
-		.antMatchers("/employees","/employees/{id}","/workday/**","/workdays/**").hasRole("EMPLOYEE")
+		.antMatchers("/employees","/employees/{id}","/workday/**","/workdays/**","/notifications/**").hasRole("EMPLOYEE")
 		.antMatchers("/authenticate", "/register","/confirm-account").permitAll()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
